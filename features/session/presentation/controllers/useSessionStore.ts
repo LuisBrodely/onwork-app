@@ -3,7 +3,11 @@ import { SignInUseCase } from "@/features/session/domain/usecases/session.usecas
 import { SignOutUseCase } from "@/features/session/domain/usecases/session.usecase.sign-out";
 import { ActivateUseCase } from "@/features/session/domain/usecases/session.usecase.activate";
 import { SessionRepositoryImpl } from "@/features/session/data/repositories/session.repository.remote";
-import { SignInModel, SignOutModel, ActivateModel } from "@/features/session/domain/models/session.model";
+import {
+  SignInModel,
+  SignOutModel,
+  ActivateModel,
+} from "@/features/session/domain/models/session.model";
 
 import { StorageAdapter } from "@/shared/adapters/StorageAdapter";
 
@@ -21,8 +25,7 @@ export interface SessionState {
   validateToken: () => void;
 
   status: SessionStatus;
-  setStatus: (status: SessionStatus) => void;
-  user?: any
+  user?: any;
 }
 
 const sessionRepositoryImpl = new SessionRepositoryImpl();
@@ -32,13 +35,20 @@ const signOutUseCase = new SignOutUseCase(sessionRepositoryImpl);
 const activateUseCase = new ActivateUseCase(sessionRepositoryImpl);
 
 export const useSessionStore = create<SessionState>()((set, get) => ({
-  status: SessionStatus.AUTHENTICATED,
+  status: SessionStatus.CHECKING,
   user: null,
   signIn: async (signInModel: SignInModel) => {
     try {
       const response = await signInUseCase.execute(signInModel);
 
-      return true
+      console.log(response)
+
+      if (response.success) {
+        await StorageAdapter.setItem("token", response.data.jwt_token);
+        set({ user: response.data, status: SessionStatus.AUTHENTICATED });
+      }
+
+      return true;
     } catch (error) {
       return false;
     }
@@ -47,9 +57,10 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
     try {
       const response = await signOutUseCase.execute(signOutModel);
 
-      await StorageAdapter.removeItem("token");
-      await StorageAdapter.removeItem("user");
-
+      if (response.success) {
+        await StorageAdapter.removeItem("token");
+        set({ user: null, status: SessionStatus.UNAUTHENTICATED });
+      }
 
     } catch (error) {
       console.log(error);
@@ -63,10 +74,13 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
       return false;
     }
   },
-  setStatus: (status: SessionStatus) => {
-    set({ status });
-  },
   validateToken: async () => {
-    
+    const token = await StorageAdapter.getItem("token");
+
+    if (token) {
+      set({ status: SessionStatus.AUTHENTICATED });
+    } else {
+      set({ status: SessionStatus.UNAUTHENTICATED });
+    }
   },
 }));

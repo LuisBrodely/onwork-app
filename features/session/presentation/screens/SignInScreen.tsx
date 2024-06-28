@@ -1,18 +1,33 @@
 import { useState } from "react";
-import { View, Text, TextInput, Button } from "react-native";
+import { View, Text, TextInput, Button, Alert } from "react-native";
 import { SignInModel } from "@/features/session/domain/models/session.model";
 import { SessionStatus, useSessionStore } from "../controllers/useSessionStore";
-import { router } from 'expo-router';
+import { router } from "expo-router";
 
 export const SignInScreen = () => {
-  const { signIn, setStatus } = useSessionStore();
+  const { signIn } = useSessionStore();
   const [singInForm, setSignInForm] = useState<SignInModel>({
     email: "",
     password: "",
   });
 
+  const handleSignIn = async (signInModel: SignInModel) => {
+    if (!signInModel.email || !signInModel.password) {
+      Alert.alert("Email and Password are required");
+      return;
+    }
+
+    const response = await signIn(signInModel);
+
+    if (response) {
+      Alert.alert("Sign In Success");
+    } else {
+      Alert.alert("Sign In Failed");
+    }
+  };
+
   return (
-    <View>
+    <View style={{ marginTop: 100 }}>
       <Text>LoginScreen</Text>
 
       <TextInput
@@ -27,16 +42,9 @@ export const SignInScreen = () => {
         onChangeText={(password) => setSignInForm({ ...singInForm, password })}
       />
 
-      <Button title="Sign In" onPress={() => signIn(singInForm)} />
+      <Button title="Sign In" onPress={() => handleSignIn(singInForm)} />
 
       <Button title="Navigate to Home" onPress={() => router.replace("/")} />
-
-      <Button title="Poner status login" onPress={() => {
-        // espera tres segundos para hacer el set status
-        setTimeout(() => {
-          setStatus(SessionStatus.AUTHENTICATED)
-        }, 3000)
-      }}/> 
     </View>
   );
 };
