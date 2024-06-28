@@ -1,9 +1,10 @@
+import { ActivityIndicator, View, StyleSheet } from "react-native";
+import { Octicons } from "@expo/vector-icons";
 import {
   SessionStatus,
   useSessionStore,
 } from "@/features/session/presentation/controllers/useSessionStore";
-import { Redirect, Stack, Tabs } from "expo-router";
-import { ActivityIndicator, View } from "react-native";
+import { Redirect, Tabs } from "expo-router";
 
 export default function AppLayout() {
   const { status } = useSessionStore();
@@ -26,6 +27,52 @@ export default function AppLayout() {
   }
 
   return (
-    <Stack/>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: { backgroundColor: '#FFF', borderTopWidth: 0 },
+        tabBarActiveTintColor: '#FF3040',
+        tabBarInactiveTintColor: '#4D4D4D',
+        tabBarShowLabel: false,
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.iconContainer}>
+              <Octicons name="home" size={24} color="#4D4D4D" />
+              {focused && <View style={styles.activeIndicator} />}
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="in-process"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.iconContainer}>
+              <Octicons name="search" size={24} color="#4D4D4D" />
+              {focused && <View style={styles.activeIndicator} />}
+            </View>
+          ),
+        }}
+      />
+    </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeIndicator: {
+    width: 5,
+    height: 5,
+    borderRadius: 5,
+    backgroundColor: '#FF3040',
+    position: 'absolute',
+    bottom: -12,
+  },
+});
