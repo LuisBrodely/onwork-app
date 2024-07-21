@@ -24,7 +24,9 @@ export const SignUpScreen = () => {
         }
         const response = await signUp(signUpModel);
         if (!response) {
-            Alert.alert("Sign In Failed");
+            Alert.alert("Error al registrarse");
+        } else {
+            Alert.alert("Usuario registrado");
         }
     };
 

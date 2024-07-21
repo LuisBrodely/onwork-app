@@ -99,7 +99,7 @@ export const signUp = async (request: SignUpModel) => {
       request
     );
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       return response.data;
     } else {
       throw new Error(response.data.message);
