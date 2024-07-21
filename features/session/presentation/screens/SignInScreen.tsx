@@ -4,6 +4,7 @@ import { SignInModel } from "@/features/session/domain/models/session.model";
 import { useSessionStore } from "../controllers/useSessionStore";
 import { AppTextInput } from "@/shared/components/custom/AppTextInput";
 import { Link } from "expo-router";
+import Logo from "@/shared/components/Logo";
 
 export const SignInScreen = () => {
   const { signIn } = useSessionStore();
@@ -25,11 +26,15 @@ export const SignInScreen = () => {
   };
 
   return (
-
     <View style={styles.container}>
       <SafeAreaView style={styles.form}>
-        <Text style={styles.title}>Iniciar sesión</Text>
-        <Text style={styles.subtitle}>Encuentra talento cerca de ti.</Text>
+        <Logo />
+        <View style={{ marginTop: 30 }}>
+          <Text style={styles.title}>Iniciar sesión</Text>
+        </View>
+        <Text style={styles.subtitle}>
+          Encuentra talento cerca de ti.
+        </Text>
         <AppTextInput
           placeholder="Ingresa tu correo electrónico"
           placeholderTextColor="#9C9C9C"
@@ -56,7 +61,7 @@ export const SignInScreen = () => {
         <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
           <Text style={{ color: 'gray', fontWeight: '600', fontSize: 14 }}>¿No tienes una cuenta? </Text>
           <TouchableOpacity>
-            <Link href={'/register'} style={{ color: '#696969', fontWeight: '600', fontSize: 14 }}> Sign Up</Link>
+            <Link href={'/register'} style={{ color: '#696969', fontWeight: '600', fontSize: 14 }}>Registrarse</Link>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -70,19 +75,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   title: {
-    fontSize: 38,
+    fontSize: 30,
     fontWeight: 'bold',
     color: "#101010",
     alignSelf: "flex-start",
-    marginTop: 20,
+    paddingBottom: 24,
   },
   subtitle: {
-    fontSize: 20,
+    color: '#717171',
+    fontSize: 19,
     fontWeight: '500',
-    color: "#717171",
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     paddingBottom: 32,
-    marginTop: 8,
   },
   form: {
     flex: 1,
