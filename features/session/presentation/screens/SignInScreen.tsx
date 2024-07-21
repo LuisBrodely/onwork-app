@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, Alert } from "react-native";
 import { SignInModel } from "@/features/session/domain/models/session.model";
 import { SessionStatus, useSessionStore } from "../controllers/useSessionStore";
 import { router } from "expo-router";
+import { AppTextInput } from "@/shared/components/custom/AppTextInput";
 
 export const SignInScreen = () => {
   const { signIn } = useSessionStore();
@@ -27,13 +28,15 @@ export const SignInScreen = () => {
     <View style={{ marginTop: 100 }}>
       <Text>LoginScreen</Text>
 
-      <TextInput
+      <AppTextInput
+        label="Email"
         placeholder="Email"
         value={singInForm.email}
         onChangeText={(email) => setSignInForm({ ...singInForm, email })}
       />
 
-      <TextInput
+      <AppTextInput
+        label="Password"
         placeholder="Password"
         value={singInForm.password}
         onChangeText={(password) => setSignInForm({ ...singInForm, password })}

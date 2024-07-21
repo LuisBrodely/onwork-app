@@ -1,5 +1,5 @@
 import { OnWorkApi } from "@/shared/config/OnWorkApi";
-import { SessionResponse } from "@/features/session/data/interfaces/session.interface";
+import { SessionResponse, SessionValidateResponse } from "@/features/session/data/interfaces/session.interface";
 import { AxiosError } from "axios";
 import {
   SignInModel,
@@ -29,8 +29,15 @@ export const singIn = async (request: SignInModel) => {
 export const signOut = async (request: SignOutModel) => {
   try {
     const response = await OnWorkApi.get<SessionResponse>(
-      `users/sign_out/${request.uuid}`
+      `users/sign_out/${request.uuid}`,
+      {
+        headers: {
+          Authorization: `Bearer ${request.token}`,
+        },
+      }
     );
+
+    console.log(response);
 
     if (response.status === 200) {
       return response.data;
@@ -63,7 +70,7 @@ export const activate = async (request: ActivateModel) => {
 
 export const validateToken = async (request: ValidateTokenModel) => {
   try {
-    const response = await OnWorkApi.get<SessionResponse>(
+    const response = await OnWorkApi.get<SessionValidateResponse>(
       'users/validate/',
       {
         headers: {

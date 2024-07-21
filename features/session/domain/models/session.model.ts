@@ -4,6 +4,7 @@ export interface SignInModel {
 }
 
 export interface SignOutModel {
+  token: string;
   uuid: string;
 }
 

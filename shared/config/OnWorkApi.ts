@@ -8,9 +8,9 @@ const OnWorkApi = axios.create({
 
 OnWorkApi.interceptors.request.use(
   async (config) => {
-    const accessToken = await StorageAdapter.getItem("token");
-    if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    const token = await StorageAdapter.getItem("token");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   }

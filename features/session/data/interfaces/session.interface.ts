@@ -5,6 +5,13 @@ export interface SessionResponse {
   statusCode: number;
 }
 
+export interface SessionValidateResponse {
+  data:       User;
+  message:    string;
+  success:    boolean;
+  statusCode: number;
+}
+
 export interface Data {
   uuid:      string;
   user:      User;

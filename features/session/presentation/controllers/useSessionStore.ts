@@ -22,10 +22,10 @@ export enum SessionStatus {
 
 export interface SessionState {
   signIn: (sigInModel: SignInModel) => Promise<boolean>;
-  signOut: (signOutModel: SignOutModel) => Promise<void>;
   activate: (activateModel: ActivateModel) => Promise<boolean>;
 
   validateToken: () => void;
+  signOut: () => Promise<void>;
 
   status: SessionStatus;
   user: User | null;
@@ -57,16 +57,26 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
     }
   },
 
-  signOut: async (signOutModel: SignOutModel) => {
+  signOut: async () => {
     try {
-      const response = await signOutUseCase.execute(signOutModel);
+      const token = await StorageAdapter.getItem("token");
+
+      if (!token) {
+        set({ status: SessionStatus.UNAUTHENTICATED });
+        return;
+      }
+
+      const response = await signOutUseCase.execute({
+        uuid: get().user?.uuid || "",
+        token
+      });
 
       if (response.success) {
         await StorageAdapter.removeItem("token");
         set({ user: null, status: SessionStatus.UNAUTHENTICATED });
       }
     } catch (error) {
-      Alert.alert("Error", "An error occurred while trying to sign out");
+      Alert.alert("Error", "A ocurrido un error al cerrar sesión");
     }
   },
 
@@ -80,11 +90,11 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
       }
 
       const response = await validateTokenUseCase.execute({ token });
-
-      console.log("VALIDATE SESSION =>  ", response);
-
+      
       if (response.success) {
-        set({ user: response.data.user, status: SessionStatus.AUTHENTICATED });
+        set({ user: response.data, status: SessionStatus.AUTHENTICATED });
+
+        console.log('user puesto', response.data);
       } else {
         set({ status: SessionStatus.UNAUTHENTICATED });
       }
