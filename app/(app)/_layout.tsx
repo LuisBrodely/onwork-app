@@ -1,5 +1,5 @@
 import { ActivityIndicator, View, StyleSheet } from "react-native";
-import { Octicons } from "@expo/vector-icons";
+import { Octicons, Entypo } from "@expo/vector-icons";
 import {
   SessionStatus,
   useSessionStore,
@@ -53,6 +53,39 @@ export default function AppLayout() {
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
               <Octicons name="search" size={24} color="#4D4D4D" />
+              {focused && <View style={styles.activeIndicator} />}
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="add-post"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.iconContainer}>
+              <Octicons name="diff-added" size={24} color="#4D4D4D" />
+              {focused && <View style={styles.activeIndicator} />}
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="map"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.iconContainer}>
+              <Entypo name="map" size={24} color="#4D4D4D" />
+              {focused && <View style={styles.activeIndicator} />}
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.iconContainer}>
+              <Octicons name="person" size={24} color="#4D4D4D" />
               {focused && <View style={styles.activeIndicator} />}
             </View>
           ),
