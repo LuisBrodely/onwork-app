@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { SignInUseCase } from "@/features/session/domain/usecases/session.usecase.sign-in";
 import { SignOutUseCase } from "@/features/session/domain/usecases/session.usecase.sign-out";
+import { SignUpUseCase } from "@/features/session/domain/usecases/session.usecase.sign-up";
 import { ActivateUseCase } from "@/features/session/domain/usecases/session.usecase.activate";
 import { SessionRepositoryImpl } from "@/features/session/data/repositories/session.repository.remote";
 import {
@@ -27,7 +28,6 @@ export interface SessionState {
   validateToken: () => void;
   signOut: () => Promise<void>;
   signUp: (signUpModel: SignUpModel) => Promise<boolean>;
-
   status: SessionStatus;
   user: User | null;
 }
@@ -36,6 +36,7 @@ const sessionRepositoryImpl = new SessionRepositoryImpl();
 
 const signInUseCase = new SignInUseCase(sessionRepositoryImpl);
 const signOutUseCase = new SignOutUseCase(sessionRepositoryImpl);
+const signUpUseCase = new SignUpUseCase(sessionRepositoryImpl);
 const activateUseCase = new ActivateUseCase(sessionRepositoryImpl);
 const validateTokenUseCase = new ValidateTokenUseCase(sessionRepositoryImpl);
 
@@ -115,11 +116,12 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
 
   signUp: async (signUpModel: SignUpModel) => {
     try {
-      const response = await sessionRepositoryImpl.signUp(signUpModel);
+      const response = await signUpUseCase.execute(signUpModel);
+      console.log(response.success)
       if (response.success) {
-        return true;
+        return true
       }
-      return false;
+      return false
     } catch (error) {
       return false;
     }

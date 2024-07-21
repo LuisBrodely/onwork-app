@@ -14,13 +14,13 @@ export interface SessionValidateResponse {
 
 
 export interface SessionCreateResponse {
-  data: CreateUser;
+  data: CreatedUser;
   message: string;
   success: boolean;
   statusCode: number;
 }
 
-export interface CreateUser {
+export interface CreatedUser {
   uuid: string;
   name: string;
   email: string;

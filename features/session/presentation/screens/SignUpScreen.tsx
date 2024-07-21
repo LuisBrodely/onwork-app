@@ -10,15 +10,15 @@ export const SignUpScreen = () => {
     const [signUpData, setSignUpData] = useState<SignUpModel>({
         name: "Leonardo",
         lastName: "Toledo",
+        phoneNumber: "9611717177",
         email: "leo@gmail.com",
         password: "12345678",
-        phoneNumber: "9611717177",
-        region: "México",
         birthday: "2022-03-01",
+        region: "chiapas",
     });
 
     const handleSignUp = async (signUpModel: SignUpModel) => {
-        if (!signUpModel.email || !signUpModel.password || !signUpModel.name || !signUpModel.lastName || !signUpModel.phoneNumber) {
+        if (!signUpModel.email || !signUpModel.password) {
             Alert.alert("Datos requeridos");
             return;
         }
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     form: {
         flex: 1,
         justifyContent: 'center',
-        marginHorizontal: 16,
+        marginHorizontal: 24,
     },
     button: {
         backgroundColor: '#5DC3B2',
