@@ -1,32 +1,25 @@
 import {
   StyleSheet,
-  Text,
   TextInput,
   TextInputProps,
   View,
 } from 'react-native';
 import React, { useState } from 'react';
 
-interface AppTextInputProps extends TextInputProps {
-  label: string;
-}
-
-export const AppTextInput: React.FC<AppTextInputProps> = ({
-  label,
+export const AppTextInput: React.FC<TextInputProps> = ({
   ...otherProps
 }) => {
   const [focused, setFocused] = useState<boolean>(false);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
       <TextInput
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         style={[
           styles.input,
           focused && {
-            borderColor: '#1a1a1a',
+            borderColor: '#A0A0A0',
           },
         ]}
         {...otherProps}
@@ -48,7 +41,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#D0D4DC',
+    borderColor: '#DEDEDE',
     padding: 14,
     borderRadius: 8,
     marginTop: 6,
