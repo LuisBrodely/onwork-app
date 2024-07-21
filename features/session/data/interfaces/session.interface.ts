@@ -52,6 +52,7 @@ export interface User {
   longitude: number;
   description: string;
   company: string;
+  image_url: string;
 }
 
 export interface Tag {

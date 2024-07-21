@@ -9,7 +9,7 @@ import Logo from "@/shared/components/Logo";
 export const SignInScreen = () => {
   const { signIn } = useSessionStore();
   const [signInForm, setSignInForm] = useState<SignInModel>({
-    email: "ramosproque1@gmail.com",
+    email: "ramosproque@gmail.com",
     password: "12345678",
   });
 
@@ -21,7 +21,7 @@ export const SignInScreen = () => {
 
     const response = await signIn(signInModel);
     if (!response) {
-      Alert.alert("Sign In Failed");
+      Alert.alert("Error al iniciar sesión");
     }
   };
 
