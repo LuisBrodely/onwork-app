@@ -7,8 +7,8 @@ import { router } from "expo-router";
 export const SignInScreen = () => {
   const { signIn } = useSessionStore();
   const [singInForm, setSignInForm] = useState<SignInModel>({
-    email: "",
-    password: "",
+    email: "ramosproque1@gmail.com",
+    password: "12345678",
   });
 
   const handleSignIn = async (signInModel: SignInModel) => {
@@ -18,12 +18,9 @@ export const SignInScreen = () => {
     }
 
     const response = await signIn(signInModel);
-
-    if (response) {
-      Alert.alert("Sign In Success");
-    } else {
+    if (!response) {
       Alert.alert("Sign In Failed");
-    }
+    } 
   };
 
   return (

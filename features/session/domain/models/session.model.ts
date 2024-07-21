@@ -11,3 +11,7 @@ export interface ActivateModel {
   token: string;
   uuid: string;
 }
+
+export interface ValidateTokenModel {
+  token: string;
+}

@@ -6,7 +6,6 @@ export const SessionProvider = ({ children }: PropsWithChildren) => {
   const { validateToken, status } = useSessionStore()
 
   useEffect(() => {
-    console.log('API URL =>>  ', process.env.EXPO_PUBLIC_API_URL)
     validateToken();
   }, [])
 

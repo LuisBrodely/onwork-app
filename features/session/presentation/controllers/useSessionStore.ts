@@ -10,6 +10,9 @@ import {
 } from "@/features/session/domain/models/session.model";
 
 import { StorageAdapter } from "@/shared/adapters/StorageAdapter";
+import { User } from "../../data/interfaces/session.interface";
+import { Alert } from "react-native";
+import { ValidateTokenUseCase } from "../../domain/usecases/session.usecase.validate-token";
 
 export enum SessionStatus {
   CHECKING = "checking",
@@ -25,7 +28,7 @@ export interface SessionState {
   validateToken: () => void;
 
   status: SessionStatus;
-  user?: any;
+  user: User | null;
 }
 
 const sessionRepositoryImpl = new SessionRepositoryImpl();
@@ -33,26 +36,27 @@ const sessionRepositoryImpl = new SessionRepositoryImpl();
 const signInUseCase = new SignInUseCase(sessionRepositoryImpl);
 const signOutUseCase = new SignOutUseCase(sessionRepositoryImpl);
 const activateUseCase = new ActivateUseCase(sessionRepositoryImpl);
+const validateTokenUseCase = new ValidateTokenUseCase(sessionRepositoryImpl);
 
 export const useSessionStore = create<SessionState>()((set, get) => ({
   status: SessionStatus.CHECKING,
   user: null,
+
   signIn: async (signInModel: SignInModel) => {
     try {
       const response = await signInUseCase.execute(signInModel);
 
-      console.log(response)
-
       if (response.success) {
         await StorageAdapter.setItem("token", response.data.jwt_token);
-        set({ user: response.data, status: SessionStatus.AUTHENTICATED });
-      }
-
-      return true;
+        set({ user: response.data.user, status: SessionStatus.AUTHENTICATED });
+        return true
+      } 
+      return false;
     } catch (error) {
       return false;
     }
   },
+
   signOut: async (signOutModel: SignOutModel) => {
     try {
       const response = await signOutUseCase.execute(signOutModel);
@@ -61,11 +65,34 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
         await StorageAdapter.removeItem("token");
         set({ user: null, status: SessionStatus.UNAUTHENTICATED });
       }
-
     } catch (error) {
-      console.log(error);
+      Alert.alert("Error", "An error occurred while trying to sign out");
     }
   },
+
+  validateToken: async () => {
+    try {
+      const token = await StorageAdapter.getItem("token");
+
+      if (!token) {
+        set({ status: SessionStatus.UNAUTHENTICATED });
+        return;
+      }
+
+      const response = await validateTokenUseCase.execute({ token });
+
+      console.log("VALIDATE SESSION =>  ", response);
+
+      if (response.success) {
+        set({ user: response.data.user, status: SessionStatus.AUTHENTICATED });
+      } else {
+        set({ status: SessionStatus.UNAUTHENTICATED });
+      }
+    } catch (error) {
+      set({ status: SessionStatus.UNAUTHENTICATED });
+    }
+  },
+
   activate: async (activateModel: ActivateModel) => {
     try {
       const response = await activateUseCase.execute(activateModel);
@@ -74,13 +101,5 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
       return false;
     }
   },
-  validateToken: async () => {
-    const token = await StorageAdapter.getItem("token");
 
-    if (token) {
-      set({ status: SessionStatus.AUTHENTICATED });
-    } else {
-      set({ status: SessionStatus.UNAUTHENTICATED });
-    }
-  },
 }));

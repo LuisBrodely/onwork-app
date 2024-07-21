@@ -5,6 +5,7 @@ import {
   SignInModel,
   SignOutModel,
   ActivateModel,
+  ValidateTokenModel,
 } from "@/features/session/domain/models/session.model";
 
 export const singIn = async (request: SignInModel) => {
@@ -59,3 +60,25 @@ export const activate = async (request: ActivateModel) => {
     throw new Error(error.message);
   }
 };
+
+export const validateToken = async (request: ValidateTokenModel) => {
+  try {
+    const response = await OnWorkApi.get<SessionResponse>(
+      'users/validate/',
+      {
+        headers: {
+          Authorization: `Bearer ${request.token}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message);
+    }
+  } catch (err) {
+    const error = err as AxiosError;
+    throw new Error(error.message);
+  }
+}
