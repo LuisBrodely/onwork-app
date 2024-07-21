@@ -7,7 +7,7 @@ import { Link } from "expo-router";
 
 export const SignInScreen = () => {
   const { signIn } = useSessionStore();
-  const [singInForm, setSignInForm] = useState<SignInModel>({
+  const [signInForm, setSignInForm] = useState<SignInModel>({
     email: "ramosproque1@gmail.com",
     password: "12345678",
   });
@@ -37,26 +37,26 @@ export const SignInScreen = () => {
           keyboardType="email-address"
           textContentType="emailAddress"
           autoFocus={true}
-          value={singInForm.email}
-          onChangeText={(email) => setSignInForm({ ...singInForm, email })}
+          value={signInForm.email}
+          onChangeText={(email) => setSignInForm({ ...signInForm, email })}
         />
         <AppTextInput
           placeholder="Contraseña"
-          value={singInForm.password}
+          value={signInForm.password}
           placeholderTextColor="#9C9C9C"
           secureTextEntry
           textContentType="password"
-          onChangeText={(password) => setSignInForm({ ...singInForm, password })}
+          onChangeText={(password) => setSignInForm({ ...signInForm, password })}
         />
         <TouchableOpacity style={styles.button}
-          onPress={() => handleSignIn(singInForm)}
+          onPress={() => handleSignIn(signInForm)}
         >
           <Text style={{ fontWeight: 'bold', color: '#fff', fontSize: 18 }}>Iniciar sesión</Text>
         </TouchableOpacity>
         <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
           <Text style={{ color: 'gray', fontWeight: '600', fontSize: 14 }}>¿No tienes una cuenta? </Text>
           <TouchableOpacity>
-            <Link href={'/activate'} style={{ color: '#696969', fontWeight: '600', fontSize: 14 }}> Sign Up</Link>
+            <Link href={'/register'} style={{ color: '#696969', fontWeight: '600', fontSize: 14 }}> Sign Up</Link>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

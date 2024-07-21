@@ -1,9 +1,10 @@
 import { OnWorkApi } from "@/shared/config/OnWorkApi";
-import { SessionResponse, SessionValidateResponse } from "@/features/session/data/interfaces/session.interface";
+import { SessionCreateResponse, SessionResponse, SessionValidateResponse } from "@/features/session/data/interfaces/session.interface";
 import { AxiosError } from "axios";
 import {
   SignInModel,
   SignOutModel,
+  SignUpModel,
   ActivateModel,
   ValidateTokenModel,
 } from "@/features/session/domain/models/session.model";
@@ -77,6 +78,25 @@ export const validateToken = async (request: ValidateTokenModel) => {
           Authorization: `Bearer ${request.token}`,
         },
       }
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message);
+    }
+  } catch (err) {
+    const error = err as AxiosError;
+    throw new Error(error.message);
+  }
+}
+
+
+export const signUp = async (request: SignUpModel) => {
+  try {
+    const response = await OnWorkApi.post<SessionCreateResponse>(
+      "users/sign_up",
+      request
     );
 
     if (response.status === 200) {

@@ -1,15 +1,15 @@
 import { SessionStatus, useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
-import { ActivateScreen } from "@/features/session/presentation/screens/ActivateScreen";
+import { SignUpScreen } from "@/features/session/presentation/screens/SignUpScreen";
 import { Redirect } from "expo-router";
 
-const activate = () => {
+const register = () => {
   const { status } = useSessionStore();
 
   if (status === SessionStatus.AUTHENTICATED) {
     return <Redirect href="/" />;
   }
 
-  return <ActivateScreen />;
+  return <SignUpScreen />;
 };
 
-export default activate;
+export default register;

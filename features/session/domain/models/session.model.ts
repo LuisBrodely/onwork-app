@@ -16,3 +16,13 @@ export interface ActivateModel {
 export interface ValidateTokenModel {
   token: string;
 }
+
+export interface SignUpModel {
+  name: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  password: string;
+  birthday: string;
+  region: string;
+}

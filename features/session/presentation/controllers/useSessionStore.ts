@@ -7,6 +7,7 @@ import {
   SignInModel,
   SignOutModel,
   ActivateModel,
+  SignUpModel,
 } from "@/features/session/domain/models/session.model";
 
 import { StorageAdapter } from "@/shared/adapters/StorageAdapter";
@@ -23,9 +24,9 @@ export enum SessionStatus {
 export interface SessionState {
   signIn: (sigInModel: SignInModel) => Promise<boolean>;
   activate: (activateModel: ActivateModel) => Promise<boolean>;
-
   validateToken: () => void;
   signOut: () => Promise<void>;
+  signUp: (signUpModel: SignUpModel) => Promise<boolean>;
 
   status: SessionStatus;
   user: User | null;
@@ -50,7 +51,7 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
         await StorageAdapter.setItem("token", response.data.jwt_token);
         set({ user: response.data.user, status: SessionStatus.AUTHENTICATED });
         return true
-      } 
+      }
       return false;
     } catch (error) {
       return false;
@@ -90,7 +91,7 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
       }
 
       const response = await validateTokenUseCase.execute({ token });
-      
+
       if (response.success) {
         set({ user: response.data, status: SessionStatus.AUTHENTICATED });
 
@@ -107,6 +108,18 @@ export const useSessionStore = create<SessionState>()((set, get) => ({
     try {
       const response = await activateUseCase.execute(activateModel);
       return true;
+    } catch (error) {
+      return false;
+    }
+  },
+
+  signUp: async (signUpModel: SignUpModel) => {
+    try {
+      const response = await sessionRepositoryImpl.signUp(signUpModel);
+      if (response.success) {
+        return true;
+      }
+      return false;
     } catch (error) {
       return false;
     }
