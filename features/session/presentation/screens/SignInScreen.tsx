@@ -56,7 +56,7 @@ export const SignInScreen = () => {
         <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
           <Text style={{ color: 'gray', fontWeight: '600', fontSize: 14 }}>¿No tienes una cuenta? </Text>
           <TouchableOpacity>
-            <Link href={'/register'} style={{ color: '#696969', fontWeight: '600', fontSize: 14 }}> Sign Up</Link>
+            <Link href={'/activate'} style={{ color: '#696969', fontWeight: '600', fontSize: 14 }}> Sign Up</Link>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
