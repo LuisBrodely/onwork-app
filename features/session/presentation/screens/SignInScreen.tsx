@@ -84,20 +84,10 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
     marginTop: 8,
   },
-  input: {
-    height: 48,
-    marginBottom: 14,
-    fontSize: 14,
-    borderRadius: 8,
-    padding: 12,
-    borderWidth: 1,
-    color: '#101010',
-    borderColor: '#DEDEDE',
-  },
   form: {
     flex: 1,
     justifyContent: 'center',
-    marginHorizontal: 16,
+    marginHorizontal: 24,
   },
   button: {
     backgroundColor: '#5DC3B2',

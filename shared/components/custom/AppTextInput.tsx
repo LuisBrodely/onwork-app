@@ -31,7 +31,7 @@ export const AppTextInput: React.FC<TextInputProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginBottom: 24,
+    marginBottom: 20,
   },
   label: {
     fontSize: 14,
@@ -40,10 +40,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#DEDEDE',
-    padding: 14,
+    fontSize: 14,
     borderRadius: 8,
-    marginTop: 6,
+    padding: 12,
+    borderWidth: 1,
+    color: '#101010',
+    borderColor: '#DEDEDE',
   },
 });
