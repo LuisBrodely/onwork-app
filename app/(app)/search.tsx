@@ -71,16 +71,6 @@ export default function Search() {
             >
               <Text style={styles.buttonText}>Distancia</Text>
             </Button>
-            <Button
-              icon="chevron-down"
-              mode="outlined"
-              style={styles.button}
-              buttonColor="#FFF"
-              textColor="#9C9C9C"
-              contentStyle={{ flexDirection: 'row-reverse' }}
-            >
-              Press me
-            </Button>
           </ScrollView>
         </View>
         <BottomSheet
