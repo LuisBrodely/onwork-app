@@ -78,6 +78,12 @@ export default function Search() {
             </Button>
           </ScrollView>
         </View>
+        <View style={{ marginHorizontal: -24 }}>
+          <Text style={{ paddingTop: 24, paddingHorizontal: 24, fontWeight: '700', fontSize: 22 }}>
+            Reparación
+          </Text>
+          <Cards />
+        </View>
         <BottomSheet
           snapTo={'50%'}
           ref={bottomSheetCategoriesRef}
@@ -102,12 +108,6 @@ export default function Search() {
         >
           <DistanceList />
         </BottomSheet>
-        <View style={{ marginHorizontal: -24 }}>
-          <Text style={{ paddingTop: 24, paddingHorizontal: 24, fontWeight: '700', fontSize: 22 }}>
-            Reparación
-          </Text>
-          <Cards />
-        </View>
       </SafeAreaView>
     </View>
   )
