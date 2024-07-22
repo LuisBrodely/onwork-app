@@ -2,13 +2,31 @@ import { View, Text, StyleSheet, FlatList } from 'react-native'
 import React from 'react'
 
 const categories = [
-  { key: '1', name: 'Admin', icon: '💼' },
-  { key: '2', name: 'Assembly', icon: '🛠️' },
-  { key: '3', name: 'Computer/IT', icon: '💻' },
-  { key: '4', name: 'Cleaning', icon: '🧹' },
-  { key: '5', name: 'Custom', icon: '💡' },
-  { key: '6', name: 'Heavy Lifting', icon: '🏋️' },
+  { key: "1", name: 'Cerrajero', icon: '🔑' },
+  { key: "2", name: 'Albañil', icon: '🧱' },
+  { key: "3", name: 'Mecánico', icon: '🚗' },
+  { key: "4", name: 'Pelquero', icon: '💇‍♂️' },
+  { key: "5", name: 'Conductor', icon: '🚚' },
+  { key: "6", name: 'Niñera', icon: '👶' },
 ];
+
+const secondCategories = [
+  { key: "1", name: 'Fontanero', icon: '🚿' },
+  { key: "2", name: 'Electricista', icon: '⚡' },
+  { key: "3", name: 'Carpintero', icon: '🔨' },
+  { key: "4", name: 'Pintor', icon: '🎨' },
+  { key: "5", name: 'Jardinero', icon: '🌳' },
+  { key: "6", name: 'Limpieza', icon: '🧼' },
+]
+
+const thirdCategories = [
+  { key: "1", name: 'Cocinero', icon: '🍳' },
+  { key: "2", name: 'Veterinario', icon: '🐾' },
+  { key: "3", name: 'Músico', icon: '🎵' },
+  { key: "4", name: 'Fotógrafo', icon: '📸' },
+  { key: "5", name: 'Sastre', icon: '🧵' },
+  { key: "6", name: 'Reparador de Electrodomésticos', icon: '🔌' },
+]
 
 const CategoryItem = ({ name, icon }: any) => (
   <View style={styles.categoryContainer}>
@@ -31,7 +49,16 @@ export const CategoryList = () => {
       />
       <FlatList
         style={{ marginTop: 20 }}
-        data={categories}
+        data={secondCategories}
+        horizontal
+        renderItem={({ item }) => <CategoryItem name={item.name} icon={item.icon} />}
+        keyExtractor={item => item.key}
+        contentContainerStyle={styles.listContainer}
+        showsHorizontalScrollIndicator={false}
+      />
+      <FlatList
+        style={{ marginTop: 20 }}
+        data={thirdCategories}
         horizontal
         renderItem={({ item }) => <CategoryItem name={item.name} icon={item.icon} />}
         keyExtractor={item => item.key}
