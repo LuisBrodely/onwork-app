@@ -48,7 +48,7 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen
-        name="in-process"
+        name="search"
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
