@@ -1,11 +1,11 @@
-import { View, Text, Pressable, Button, StyleSheet, TextInput, ScrollView } from 'react-native'
+import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import React, { useCallback, useRef, useState } from 'react'
 import { BottomSheet, BottomSheetMethods } from '@/shared/components/BottomSheet'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CategoryList } from "@/shared/components/(modals)/CategoryList";
 import { DistanceList } from "@/shared/components/(modals)/DistanceList";
 import { PriceList } from "@/shared/components/(modals)/PriceList";
-import { Searchbar } from 'react-native-paper';
+import { Searchbar, Button } from 'react-native-paper';
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,18 +38,49 @@ export default function Search() {
         />
         <View style={{ marginTop: 12 }}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <Pressable style={styles.button} onPress={() => categoriesHandler()} >
-              <Text style={styles.buttonText}>Categorías</Text>
-            </Pressable>
-            <Pressable style={styles.button} onPress={() => pricesHandler()}>
-              <Text style={styles.buttonText}>Precios</Text>
-            </Pressable>
-            <Pressable style={styles.button} onPress={() => distancesHandler()}>
+            <Button
+              icon="chevron-down"
+              mode="outlined"
+              style={styles.button}
+              buttonColor="#FFF"
+              textColor="#9C9C9C"
+              contentStyle={{ flexDirection: 'row-reverse' }}
+              onPress={() => categoriesHandler()}
+            >
+              <Text>Categorías</Text>
+            </Button>
+            <Button
+              icon="chevron-down"
+              mode="outlined"
+              style={styles.button}
+              buttonColor="#FFF"
+              textColor="#9C9C9C"
+              contentStyle={{ flexDirection: 'row-reverse' }}
+              onPress={() => pricesHandler()}
+            >
+              <Text>Precios</Text>
+            </Button>
+            <Button
+              icon="chevron-down"
+              mode="outlined"
+              style={styles.button}
+              buttonColor="#FFF"
+              textColor="#9C9C9C"
+              contentStyle={{ flexDirection: 'row-reverse' }}
+              onPress={() => distancesHandler()}
+            >
               <Text style={styles.buttonText}>Distancia</Text>
-            </Pressable>
-            <Pressable style={styles.button} onPress={() => distancesHandler()}>
-              <Text style={styles.buttonText}>Distancia</Text>
-            </Pressable>
+            </Button>
+            <Button
+              icon="chevron-down"
+              mode="outlined"
+              style={styles.button}
+              buttonColor="#FFF"
+              textColor="#9C9C9C"
+              contentStyle={{ flexDirection: 'row-reverse' }}
+            >
+              Press me
+            </Button>
           </ScrollView>
         </View>
         <BottomSheet
@@ -90,11 +121,11 @@ const styles = StyleSheet.create({
   },
   button: {
     borderWidth: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
     borderRadius: 8,
     marginRight: 10,
-    borderColor: "#DEDEDE"
+    borderColor: "#DEDEDE",
+    backgroundColor: '#FFF',
+    color: '#9C9C9C',
   },
   buttonText: {
     color: '#9C9C9C',
