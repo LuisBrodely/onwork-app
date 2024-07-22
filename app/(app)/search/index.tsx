@@ -1,84 +1,67 @@
-import { useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, ScrollView, TextInput, Pressable, TouchableOpacity } from "react-native";
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { CategoryList } from "@/shared/components/CategoryList";
+import { View, Text, Pressable, Button } from 'react-native'
+import React, { useCallback, useRef } from 'react'
+import { BottomSheet, BottomSheetMethods } from '@/shared/components/BottomSheet'
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { CategoryList } from "@/shared/components/(modals)/CategoryList";
+import { DistanceList } from "@/shared/components/(modals)/DistanceList";
+import { PriceList } from "@/shared/components/(modals)/PriceList";
 
 export default function Search() {
-  const snapPoints = useMemo(() => ['30%'], []);
 
-  const sheetRef = useRef<BottomSheet>(null);
-  const [isOpen, setIsOpen] = useState(true);
+  const bottomSheetCategoriesRef = useRef<BottomSheetMethods>(null);
+  const bottomSheetPricesRef = useRef<BottomSheetMethods>(null);
+  const bottomSheetDistancesRef = useRef<BottomSheetMethods>(null);
 
-  const handleSnapPress = useCallback((index: number) => {
-    sheetRef.current?.snapToIndex(index);
-    setIsOpen(true);
+  const categoriesHandler = useCallback(() => {
+    bottomSheetCategoriesRef.current?.expand();
   }, []);
 
-  return (
-    <View style={[styles.container, {
-      backgroundColor
-        : isOpen ? 'gray' : 'white'
-    }]}>
-      <StatusBar style="auto" />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleSnapPress(0)}
-      >
-        <Text>Open modal</Text>
-      </TouchableOpacity>
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        enablePanDownToClose={true}
-        onClose={() => setIsOpen(false)}
-      >
-        <BottomSheetView>
-          <CategoryList />
-        </BottomSheetView>
-      </BottomSheet>
-    </View>
-  );
-}
+  const pricesHandler = useCallback(() => {
+    bottomSheetPricesRef.current?.expand();
+  }, []);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  searchInput: {
-    borderRadius: 20,
-    paddingVertical: 15,
-    marginVertical: 20,
-    paddingLeft: 30,
-    borderWidth: 1,
-    borderColor: '#DEDEDE',
-    marginTop: 64
-  },
-  button: {
-    alignContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginRight: 10,
-    borderColor: "#DEDEDE"
-  },
-  buttonIcon: {
-    alignContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    marginRight: 10,
-    borderColor: "#DEDEDE"
-  },
-  buttonText: {
-    color: '#9C9C9C',
-  },
-});
+  const distancesHandler = useCallback(() => {
+    bottomSheetDistancesRef.current?.expand();
+  }, []);
+
+
+  return (
+    <View style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+        <Button
+          title='Categories'
+          onPress={() => categoriesHandler()} />
+        <Button
+          title='Prices'
+          onPress={() => pricesHandler()} />
+        <Button
+          title='Distances'
+          onPress={() => distancesHandler()} />
+        <BottomSheet
+          snapTo={'40%'}
+          ref={bottomSheetCategoriesRef}
+          backgroundColor='white'
+          backDropColor='black'
+        >
+          <CategoryList />
+        </BottomSheet>
+        <BottomSheet
+          snapTo={'40%'}
+          ref={bottomSheetPricesRef}
+          backgroundColor='white'
+          backDropColor='black'
+        >
+          <PriceList />
+        </BottomSheet>
+        <BottomSheet
+          snapTo={'40%'}
+          ref={bottomSheetDistancesRef}
+          backgroundColor='white'
+          backDropColor='black'
+        >
+          <DistanceList />
+        </BottomSheet>
+      </SafeAreaView>
+    </View>
+  )
+}

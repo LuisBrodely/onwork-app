@@ -1,31 +1,84 @@
-import BottomSheet from '@gorhom/bottom-sheet';
-import { useMemo } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View, Text, ScrollView, TextInput, Pressable, TouchableOpacity } from "react-native";
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { CategoryList } from "@/shared/components/(modals)/CategoryList";
 
-const categories = () => {
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
+export default function Search() {
+  const snapPoints = useMemo(() => ['30%'], []);
+
+  const sheetRef = useRef<BottomSheet>(null);
+  const [isOpen, setIsOpen] = useState(true);
+
+  const handleSnapPress = useCallback((index: number) => {
+    sheetRef.current?.snapToIndex(index);
+    setIsOpen(true);
+  }, []);
+
   return (
-    <View style={style.container}>
-      <BottomSheet 
-      index={1}
-      snapPoints={snapPoints}
-      enablePanDownToClose={true}
+    <View style={[styles.container, {
+      backgroundColor
+        : isOpen ? 'gray' : 'white'
+    }]}>
+      <StatusBar style="auto" />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleSnapPress(0)}
       >
-        <View style={{ backgroundColor: 'white', padding: 16 }}>
-          <Text>Categorías</Text>
-        </View>
+        <Text>Open modal</Text>
+      </TouchableOpacity>
+      <BottomSheet
+        ref={sheetRef}
+        snapPoints={snapPoints}
+        enablePanDownToClose={true}
+        onClose={() => setIsOpen(false)}
+      >
+        <BottomSheetView>
+          <CategoryList />
+        </BottomSheetView>
       </BottomSheet>
     </View>
-  )
+  );
 }
 
-export default categories;
-
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 14,
-    backgroundColor: 'black',
-    opacity: 0.5
-  }
-})
+    paddingHorizontal: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchInput: {
+    borderRadius: 20,
+    paddingVertical: 15,
+    marginVertical: 20,
+    paddingLeft: 30,
+    borderWidth: 1,
+    borderColor: '#DEDEDE',
+    marginTop: 64
+  },
+  button: {
+    alignContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginRight: 10,
+    borderColor: "#DEDEDE"
+  },
+  buttonIcon: {
+    alignContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    marginRight: 10,
+    borderColor: "#DEDEDE"
+  },
+  buttonText: {
+    color: '#9C9C9C',
+  },
+});
