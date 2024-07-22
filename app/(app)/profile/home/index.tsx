@@ -6,6 +6,7 @@ import {
   StyleSheet,
   FlatList,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import { Image } from "expo-image";
 import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
@@ -61,7 +62,7 @@ const ProfileScreen = () => {
               <Pressable
                 style={styles.profileBadge}
                 onPress={() => {
-                  router.push("/profile/chat");
+                  router.push("/profile/home/chat");
                 }}
               >
                 <Text style={styles.profileStars}>Contactar</Text>
@@ -155,37 +156,33 @@ const ProfileScreen = () => {
               keyExtractor={(item) => item.uuid}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item, index }) => (
-                <Image
-                  source={{ uri: item.url_image }}
-                  style={{
-                    width: 120,
-                    height: 180,
-                    borderRadius: 10,
-                    marginRight: 12,
-                    ...(index === 0 && {
-                      marginLeft: 24,
-                    }),
-                    ...(index === 4 && {
-                      marginRight: 24,
-                    }),
+                <TouchableOpacity
+                  onPress={() => {
+                    router.push(`/profile/home/publication/${item.uuid}`);
                   }}
-                />
+                >
+                  <Image
+                    source={{ uri: item.url_image }}
+                    style={{
+                      width: 120,
+                      height: 180,
+                      borderRadius: 10,
+                      marginRight: 12,
+                      ...(index === 0 && {
+                        marginLeft: 24,
+                      }),
+                      ...(index === 4 && {
+                        marginRight: 24,
+                      }),
+                    }}
+                  />
+                </TouchableOpacity>
               )}
             />
           </View>
         </View>
-        <View style={styles.skillsSection}>
-          <Text style={styles.skillsTitle}>Opiniones</Text>
-          <View style={styles.skillsContainer}>
-            {user?.tags.map((tag, index) => (
-              <View key={index} style={styles.skillBadge}>
-                <Text style={styles.skillText}>{tag.title}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
       </ScrollView>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
     </View>
   );
 };
@@ -200,7 +197,7 @@ const styles = StyleSheet.create({
   },
   coverPhoto: {
     width: "100%",
-    height: 130,
+    height: 80,
     backgroundColor: "#EF3166",
     justifyContent: "center",
     alignItems: "center",
