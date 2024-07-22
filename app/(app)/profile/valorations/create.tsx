@@ -1,5 +1,6 @@
 import { View, Text, Alert, Pressable, Button } from "react-native";
 import { useState } from "react";
+
 import { useValorationStore } from "@/features/valorations/presentation/controllers/useValorationStore";
 import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
 import { AppTextInput } from '../../../../shared/components/custom/AppTextInput';

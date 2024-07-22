@@ -7,7 +7,7 @@ import {
 import { Redirect, Tabs } from "expo-router";
 
 export default function AppLayout() {
-  const { status } = useSessionStore();
+  const { status, user } = useSessionStore();
 
   // You can keep the splash screen open, or render a loading screen like we do here.
   if (status === SessionStatus.CHECKING) {
@@ -30,9 +30,9 @@ export default function AppLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { backgroundColor: '#FFF', borderTopWidth: 0 },
-        tabBarActiveTintColor: '#FF3040',
-        tabBarInactiveTintColor: '#4D4D4D',
+        tabBarStyle: { backgroundColor: "#FFF", borderTopWidth: 0 },
+        tabBarActiveTintColor: "#FF3040",
+        tabBarInactiveTintColor: "#4D4D4D",
         tabBarShowLabel: false,
       }}
     >
@@ -97,15 +97,15 @@ export default function AppLayout() {
 
 const styles = StyleSheet.create({
   iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   activeIndicator: {
     width: 5,
     height: 5,
     borderRadius: 5,
-    backgroundColor: '#FF3040',
-    position: 'absolute',
+    backgroundColor: "#FF3040",
+    position: "absolute",
     bottom: -12,
   },
 });

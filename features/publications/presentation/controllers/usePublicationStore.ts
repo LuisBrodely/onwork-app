@@ -51,8 +51,6 @@ export const usePublicationStore = create<PublicationState>((set, get) => ({
       const response = await createPublicationUseCase.execute(publication);
 
       if (response.status) {
-        const response = await getPublicationsByUserUseCase.execute({ uuid: publication.uuid });
-        set({ myPublications: response.data });
         return true;
       } else {
         throw new Error(response.message);
@@ -110,8 +108,6 @@ export const usePublicationStore = create<PublicationState>((set, get) => ({
       const response = await deletePublicationUseCase.execute(uuidModel);
       
       if (response.status) {
-        const response = await getPublicationsByUserUseCase.execute({ uuid: uuidModel.uuid });
-        set({ myPublications: response.data });
         return true;
       } else {
         throw new Error(response.message);

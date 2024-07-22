@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   View,
   Text,
@@ -13,20 +13,37 @@ import { useSessionStore } from "@/features/session/presentation/controllers/use
 import { StatusBar } from "expo-status-bar";
 import { Octicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { Publication } from "@/features/publications/data/interfaces/publication.interface";
+import {
+  calculateAverageRating,
+  capitalize,
+  formatPhoneNumber,
+} from "@/shared/utils/util";
 import { usePublicationStore } from "@/features/publications/presentation/controllers/usePublicationStore";
-import { capitalize, formatPhoneNumber } from "@/shared/utils/util";
+import { useValorationStore } from "@/features/valorations/presentation/controllers/useValorationStore";
 
 const ProfileScreen = () => {
-  const [publications, setPublications] = useState<Publication[]>([]);
   const { user } = useSessionStore();
-  const { getPublicationsByUser } = usePublicationStore();
+  const { getValorationsByProvider, myValorations, setMyValorations } =
+    useValorationStore();
+  const { getPublicationsByUser, myPublications, setMyPublications } =
+    usePublicationStore();
   const router = useRouter();
+
+  const fetchValorations = async () => {
+    if (user) {
+      const response = await getValorationsByProvider({ uuid: user.uuid });
+      setMyValorations(response);
+    }
+  };
+
+  useEffect(() => {
+    fetchValorations();
+  }, [user]);
 
   const fetchPublications = async () => {
     if (user) {
       const response = await getPublicationsByUser({ uuid: user.uuid });
-      setPublications(response);
+      setMyPublications(response);
     }
   };
 
@@ -42,7 +59,10 @@ const ProfileScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.profileInfo}>
-          <View style={styles.coverPhoto}></View>
+          <Image
+            style={styles.coverPhoto}
+            source={require("@/assets/images/bg-red-2.png")}
+          ></Image>
           <View style={styles.profileDetails}>
             <Image
               style={styles.profileImage}
@@ -71,7 +91,7 @@ const ProfileScreen = () => {
           </View>
           <View style={styles.stats}>
             <View style={styles.stat}>
-              <Text style={styles.statNumber}>{publications.length}</Text>
+              <Text style={styles.statNumber}>{myPublications.length}</Text>
               <Text style={styles.statLabel}>Publicaciones</Text>
             </View>
 
@@ -84,12 +104,14 @@ const ProfileScreen = () => {
                 }}
               >
                 <Octicons name="star-fill" size={18} color="#FF4081" />
-                <Text style={styles.statNumber}>5.0</Text>
+                <Text style={styles.statNumber}>
+                  {calculateAverageRating(myValorations)}
+                </Text>
               </View>
               <Text style={styles.statLabel}>Calificación</Text>
             </View>
             <View style={styles.stat}>
-              <Text style={styles.statNumber}>14</Text>
+              <Text style={styles.statNumber}>{myPublications.length}</Text>
               <Text style={styles.statLabel}>Opiniones</Text>
             </View>
           </View>
@@ -152,7 +174,7 @@ const ProfileScreen = () => {
           <View style={{ ...styles.skillsContainer }}>
             <FlatList
               horizontal={true}
-              data={publications}
+              data={myPublications}
               keyExtractor={(item) => item.uuid}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item, index }) => (
@@ -198,7 +220,6 @@ const styles = StyleSheet.create({
   coverPhoto: {
     width: "100%",
     height: 80,
-    backgroundColor: "#EF3166",
     justifyContent: "center",
     alignItems: "center",
   },
