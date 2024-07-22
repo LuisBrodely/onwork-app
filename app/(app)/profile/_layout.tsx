@@ -32,11 +32,11 @@ const Layout = () => {
     >
       <MaterialTopTabs.Screen name="home" options={{ title: "Perfil" }} />
       <MaterialTopTabs.Screen
-        name="valorations/index"
-        options={{ title: "Valoraciones" }}
+        name="valorations"
+        options={{ title: "Opiniones" }}
       />
       <MaterialTopTabs.Screen
-        name="services/index"
+        name="services"
         options={{ title: "Servicios" }}
       />
     </MaterialTopTabs>
