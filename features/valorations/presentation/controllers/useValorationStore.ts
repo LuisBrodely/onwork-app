@@ -17,12 +17,12 @@ const getValorationsByProviderUseCase = new GetValorationsByProviderUseCase(valo
 const deleteValorationUseCase = new DeleteValorationUseCase(valorationRepository);
 
 interface ValorationState {
-  valorations: Valoration[];
+  myValorations: Valoration[];
   isLoading: boolean;
   error?: Error | null | unknown;
 
   setIsLoading: (isLoading: boolean) => void;
-  setValorations: (valorations: Valoration[]) => void;
+  setMyValorations: (valorations: Valoration[]) => void;
 
   createValoration: (valoration: CreateValorationModel) => Promise<boolean>;
   getValorationsByProvider: (providerModel: GetValorationsByProviderModel) => Promise<Valoration[]>;
@@ -30,15 +30,15 @@ interface ValorationState {
 }
 
 export const useValorationStore = create<ValorationState>((set, get) => ({
-  valorations: [],
+  myValorations: [],
   isLoading: false,
   error: null,
 
   setIsLoading: (isLoading: boolean) => {
     set({ isLoading });
   },
-  setValorations: (valorations: Valoration[]) => {
-    set({ valorations });
+  setMyValorations: (myValorations: Valoration[]) => {
+    set({ myValorations });
   },
 
   createValoration: async (valoration: CreateValorationModel) => {
@@ -48,8 +48,6 @@ export const useValorationStore = create<ValorationState>((set, get) => ({
       const response = await createValorationUseCase.execute(valoration);
 
       if (response.status) {
-        const updatedValorations = await getValorationsByProviderUseCase.execute({ uuid: valoration.provider_uuid });
-        set({ valorations: updatedValorations.data });
         return true;
       } else {
         throw new Error(response.message);
@@ -88,8 +86,6 @@ export const useValorationStore = create<ValorationState>((set, get) => ({
       const response = await deleteValorationUseCase.execute(uuidModel);
 
       if (response.status) {
-        const updatedValorations = await getValorationsByProviderUseCase.execute({ uuid: uuidModel.uuid });
-        set({ valorations: updatedValorations.data });
         return true;
       } else {
         throw new Error(response.message);

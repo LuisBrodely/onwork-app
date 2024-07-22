@@ -11,6 +11,11 @@ export default function Layout() {
       />
       <Stack.Screen name="chat" />
       <Stack.Screen name="edit" />
+      <Stack.Screen name="publication/[id]" 
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
