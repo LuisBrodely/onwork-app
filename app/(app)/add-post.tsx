@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Button, Image, View, StyleSheet, Text, Pressable, TouchableOpacity } from 'react-native';
+import { Image, View, StyleSheet, Text, Pressable, TouchableOpacity, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { AppTextInput } from '@/shared/components/custom/AppTextInput';
 import Constants from 'expo-constants';
-import axios from 'axios';
 import { useSessionStore } from '@/features/session/presentation/controllers/useSessionStore';
+import { usePublicationStore } from '@/features/publications/presentation/controllers/usePublicationStore';
 
 export default function AddPostScreen() {
   const { user } = useSessionStore();
+  const { createPublication } = usePublicationStore();
   const [image, setImage] = useState<string | null>(null);
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [title, setTitle] = useState<string>('Caja 2');
+  const [description, setDescription] = useState<string>('Caja 3');
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -35,6 +36,11 @@ export default function AddPostScreen() {
     formData.append('description', description);
     formData.append('user_uuid', user?.uuid ?? '');
 
+    if (title === '' || description === '') {
+      Alert.alert('Error', 'Los campos título y descripción son obligatorios');
+      return;
+    }
+
     if (image) {
       const filename = image.split('/').pop();
       const match = /\.(\w+)$/.exec(filename ?? '');
@@ -49,20 +55,21 @@ export default function AddPostScreen() {
 
     console.log('formData:', formData);
 
-    try {
-      const response = await axios.post('https://onwork-publication.integrador.xyz/publications', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    if (user) {
+      const response = await createPublication({ formData, uuid: user.uuid });
+      if (response) {
+        Alert.alert('Publicación creada', 'Tu publicación ha sido creada exitosamente');
 
-      if (response.status === 200) {
-        console.log('Post created successfully');
+        setTitle('');
+        setDescription('');
+        setImage(null);
       } else {
-        console.log('Failed to create post');
+        Alert.alert('Error', 'Ocurrió un error al crear la publicación');
+
+        setTitle('');
+        setDescription('');
+        setImage(null);
       }
-    } catch (error) {
-      console.error('Error:', error);
     }
   };
 
