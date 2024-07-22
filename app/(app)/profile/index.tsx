@@ -1,20 +1,40 @@
-import React from "react";
-import { View, Text, ScrollView, StyleSheet, FlatList, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  FlatList,
+  Pressable,
+} from "react-native";
 import { Image } from "expo-image";
 import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
 import { StatusBar } from "expo-status-bar";
 import { Octicons } from "@expo/vector-icons";
-import Constants from "expo-constants";
 import { useRouter } from "expo-router";
+import { Publication } from "@/features/publications/data/interfaces/publication.interface";
+import { usePublicationStore } from "@/features/publications/presentation/controllers/usePublicationStore";
+import { capitalize, formatPhoneNumber } from "@/shared/utils/util";
 
 const ProfileScreen = () => {
+  const [publications, setPublications] = useState<Publication[]>([]);
   const { user } = useSessionStore();
+  const { getPublicationsByUser } = usePublicationStore();
   const router = useRouter();
 
+  const fetchPublications = async () => {
+    if (user) {
+      const response = await getPublicationsByUser({ uuid: user.uuid });
+      setPublications(response);
+    }
+  };
+
+  useEffect(() => {
+    fetchPublications();
+  }, [user]);
+
   return (
-    <View 
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <ScrollView
         style={styles.container}
         showsHorizontalScrollIndicator={false}
@@ -26,7 +46,7 @@ const ProfileScreen = () => {
             <Image
               style={styles.profileImage}
               source={{
-                uri: user?.image_url
+                uri: user?.image_url,
               }}
             />
             <View>
@@ -38,7 +58,8 @@ const ProfileScreen = () => {
                 <Text style={styles.profileName}>{user?.name}</Text>
                 <Text style={styles.profileTitle}>{user?.lastName}</Text>
               </View>
-              <Pressable style={styles.profileBadge}
+              <Pressable
+                style={styles.profileBadge}
                 onPress={() => {
                   router.push("/profile/chat");
                 }}
@@ -49,7 +70,7 @@ const ProfileScreen = () => {
           </View>
           <View style={styles.stats}>
             <View style={styles.stat}>
-              <Text style={styles.statNumber}>20</Text>
+              <Text style={styles.statNumber}>{publications.length}</Text>
               <Text style={styles.statLabel}>Publicaciones</Text>
             </View>
 
@@ -73,8 +94,46 @@ const ProfileScreen = () => {
           </View>
         </View>
         <View style={styles.skillsSection}>
-          <Text style={styles.skillsTitle}>Descripción</Text>
+          <Text style={styles.skillsTitle}>Información</Text>
           <Text style={styles.userDescription}>{user?.description}</Text>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+              marginTop: 10,
+            }}
+          >
+            <Octicons name="location" size={14} color="gray" />
+            <Text
+              style={{
+                ...styles.userDescription,
+                color: "gray",
+              }}
+            >
+              {capitalize(user?.region ?? "")}
+            </Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+              marginTop: 10,
+            }}
+          >
+            <Octicons name="device-mobile" size={14} color="gray" />
+            <Text
+              style={{
+                ...styles.userDescription,
+                color: "gray",
+              }}
+            >
+              {"+52 " + formatPhoneNumber(user?.phoneNumber ?? "")}
+            </Text>
+          </View>
         </View>
         {user?.tags && user.tags.length > 0 && (
           <View style={styles.skillsSection}>
@@ -91,31 +150,15 @@ const ProfileScreen = () => {
         <View style={{ paddingVertical: 14 }}>
           <View style={{ ...styles.skillsContainer }}>
             <FlatList
-              horizontal
-              data={[
-                {
-                  id: "1",
-                  image:
-                    "https://scontent.ftgz2-1.fna.fbcdn.net/v/t39.30808-6/380225606_1053387445684353_5102482143565506419_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGg45zTO40jMMjMqFjAJAA7SASloZ07JrBIBKWhnTsmsI_L8JjSyTYR1tQL9cXx5YpE-nVs8Nrcd9ROawq4yrmb&_nc_ohc=-vQNJHBYyKgQ7kNvgGSCuR9&_nc_ht=scontent.ftgz2-1.fna&oh=00_AYAYF_bce3SHTmH-ofXwmj99drxzMrOWWx9q0zrLS4kmtA&oe=66A28588",
-                  title: "Trabajo 1",
-                  description: "Descripcion del trabajo 1",
-                },
-                {
-                  id: "2",
-                  image:
-                    "https://scontent.ftgz2-1.fna.fbcdn.net/v/t39.30808-6/380225606_1053387445684353_5102482143565506419_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGg45zTO40jMMjMqFjAJAA7SASloZ07JrBIBKWhnTsmsI_L8JjSyTYR1tQL9cXx5YpE-nVs8Nrcd9ROawq4yrmb&_nc_ohc=-vQNJHBYyKgQ7kNvgGSCuR9&_nc_ht=scontent.ftgz2-1.fna&oh=00_AYAYF_bce3SHTmH-ofXwmj99drxzMrOWWx9q0zrLS4kmtA&oe=66A28588",
-                  title: "Trabajo 2",
-                  description:
-                    "Descripcion del trabajo 2 Descripcion del trabajo 2 Descripcion del trabajo 2",
-                },
-              ]}
-              keyExtractor={(item) => item.id}
+              horizontal={true}
+              data={publications}
+              keyExtractor={(item) => item.uuid}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item, index }) => (
                 <Image
-                  source={{ uri: item.image }}
+                  source={{ uri: item.url_image }}
                   style={{
-                    width: 220,
+                    width: 120,
                     height: 180,
                     borderRadius: 10,
                     marginRight: 12,
@@ -129,62 +172,16 @@ const ProfileScreen = () => {
                 />
               )}
             />
-            <FlatList
-              horizontal
-              data={[
-                {
-                  id: "1",
-                  image:
-                    "https://scontent.ftgz2-1.fna.fbcdn.net/v/t39.30808-6/380225606_1053387445684353_5102482143565506419_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGg45zTO40jMMjMqFjAJAA7SASloZ07JrBIBKWhnTsmsI_L8JjSyTYR1tQL9cXx5YpE-nVs8Nrcd9ROawq4yrmb&_nc_ohc=-vQNJHBYyKgQ7kNvgGSCuR9&_nc_ht=scontent.ftgz2-1.fna&oh=00_AYAYF_bce3SHTmH-ofXwmj99drxzMrOWWx9q0zrLS4kmtA&oe=66A28588",
-                  title: "Trabajo 1",
-                  description: "Descripcion del trabajo 1",
-                },
-                {
-                  id: "2",
-                  image:
-                    "https://scontent.ftgz2-1.fna.fbcdn.net/v/t39.30808-6/380225606_1053387445684353_5102482143565506419_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGg45zTO40jMMjMqFjAJAA7SASloZ07JrBIBKWhnTsmsI_L8JjSyTYR1tQL9cXx5YpE-nVs8Nrcd9ROawq4yrmb&_nc_ohc=-vQNJHBYyKgQ7kNvgGSCuR9&_nc_ht=scontent.ftgz2-1.fna&oh=00_AYAYF_bce3SHTmH-ofXwmj99drxzMrOWWx9q0zrLS4kmtA&oe=66A28588",
-                  title: "Trabajo 2",
-                  description:
-                    "Descripcion del trabajo 2 Descripcion del trabajo 2 Descripcion del trabajo 2",
-                },
-                {
-                  id: "3",
-                  image:
-                    "https://scontent.ftgz2-1.fna.fbcdn.net/v/t39.30808-6/380225606_1053387445684353_5102482143565506419_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGg45zTO40jMMjMqFjAJAA7SASloZ07JrBIBKWhnTsmsI_L8JjSyTYR1tQL9cXx5YpE-nVs8Nrcd9ROawq4yrmb&_nc_ohc=-vQNJHBYyKgQ7kNvgGSCuR9&_nc_ht=scontent.ftgz2-1.fna&oh=00_AYAYF_bce3SHTmH-ofXwmj99drxzMrOWWx9q0zrLS4kmtA&oe=66A28588",
-                  title: "Trabajo 2",
-                  description:
-                    "Descripcion del trabajo 2 Descripcion del trabajo 2 Descripcion del trabajo 2",
-                },
-                {
-                  id: "4",
-                  image:
-                    "https://scontent.ftgz2-1.fna.fbcdn.net/v/t39.30808-6/380225606_1053387445684353_5102482143565506419_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGg45zTO40jMMjMqFjAJAA7SASloZ07JrBIBKWhnTsmsI_L8JjSyTYR1tQL9cXx5YpE-nVs8Nrcd9ROawq4yrmb&_nc_ohc=-vQNJHBYyKgQ7kNvgGSCuR9&_nc_ht=scontent.ftgz2-1.fna&oh=00_AYAYF_bce3SHTmH-ofXwmj99drxzMrOWWx9q0zrLS4kmtA&oe=66A28588",
-                  title: "Trabajo 2",
-                  description:
-                    "Descripcion del trabajo 2 Descripcion del trabajo 2 Descripcion del trabajo 2",
-                },
-              ]}
-              style={{ marginTop: 16 }}
-              keyExtractor={(item) => item.id}
-              showsHorizontalScrollIndicator={false}
-              renderItem={({ item, index }) => (
-                <Image
-                  source={{ uri: item.image }}
-                  style={{
-                    width: 120,
-                    height: 140,
-                    borderRadius: 10,
-                    marginRight: 12,
-                    ...(index === 0 && {
-                      marginLeft: 24,
-                    }),
-                    ...(index === 4 && {
-                      marginRight: 24,
-                    }),
-                  }}
-                />
-              )}
-            />
+          </View>
+        </View>
+        <View style={styles.skillsSection}>
+          <Text style={styles.skillsTitle}>Opiniones</Text>
+          <View style={styles.skillsContainer}>
+            {user?.tags.map((tag, index) => (
+              <View key={index} style={styles.skillBadge}>
+                <Text style={styles.skillText}>{tag.title}</Text>
+              </View>
+            ))}
           </View>
         </View>
       </ScrollView>
@@ -203,7 +200,7 @@ const styles = StyleSheet.create({
   },
   coverPhoto: {
     width: "100%",
-    height: 80,
+    height: 130,
     backgroundColor: "#EF3166",
     justifyContent: "center",
     alignItems: "center",
@@ -265,12 +262,12 @@ const styles = StyleSheet.create({
   },
   skillsSection: {
     paddingHorizontal: 24,
-    paddingVertical: 12,
+    paddingVertical: 10,
   },
   skillsTitle: {
     fontSize: 16,
     fontWeight: "600",
-    marginBottom: 14,
+    marginBottom: 8,
   },
   skillsContainer: {
     flexDirection: "row",
