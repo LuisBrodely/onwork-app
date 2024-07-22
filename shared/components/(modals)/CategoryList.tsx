@@ -73,12 +73,12 @@ export const CategoryList = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    padding: 24,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
+    padding: 24,
   },
   listContainer: {
     paddingHorizontal: 10,

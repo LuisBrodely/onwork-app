@@ -30,14 +30,16 @@ export const PriceList = () => {
             trackStyle={styles.track}
           />
         </View>
-        <Pressable
-          style={{ backgroundColor: '#EF3166', padding: 16, borderRadius: 8, alignItems: 'center', marginTop: 32 }}
-          onPress={() => console.log('View Results pressed range: ' + price)}
-        >
-          <Text style={{ color: '#fff' }}>
-            View Results
-          </Text>
-        </Pressable>
+        <View style={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
+          <Pressable
+            style={{ backgroundColor: '#EF3166', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8, alignItems: 'center', marginTop: 32 }}
+            onPress={() => console.log('View Results pressed range: ' + price)}
+          >
+            <Text style={{ color: '#fff' }}>
+              View Results
+            </Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );

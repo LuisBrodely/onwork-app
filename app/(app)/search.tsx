@@ -6,6 +6,7 @@ import { CategoryList } from "@/shared/components/(modals)/CategoryList";
 import { DistanceList } from "@/shared/components/(modals)/DistanceList";
 import { PriceList } from "@/shared/components/(modals)/PriceList";
 import { Searchbar, Button } from 'react-native-paper';
+import Cards from '@/shared/components/Cards';
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,11 +38,15 @@ export default function Search() {
           placeholderTextColor={"#9C9C9C"}
         />
         <View style={{ marginTop: 12 }}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <ScrollView
+            style={{ marginHorizontal: -24 }}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
             <Button
               icon="chevron-down"
               mode="outlined"
-              style={styles.button}
+              style={[styles.button, { marginLeft: 24 }]}
               buttonColor="#FFF"
               textColor="#9C9C9C"
               contentStyle={{ flexDirection: 'row-reverse' }}
@@ -74,7 +79,7 @@ export default function Search() {
           </ScrollView>
         </View>
         <BottomSheet
-          snapTo={'40%'}
+          snapTo={'50%'}
           ref={bottomSheetCategoriesRef}
           backgroundColor='white'
           backDropColor='black'
@@ -97,6 +102,12 @@ export default function Search() {
         >
           <DistanceList />
         </BottomSheet>
+        <View style={{ marginHorizontal: -24 }}>
+          <Text style={{ paddingTop: 24, paddingHorizontal: 24, fontWeight: '700', fontSize: 22 }}>
+            Reparación
+          </Text>
+          <Cards />
+        </View>
       </SafeAreaView>
     </View>
   )
