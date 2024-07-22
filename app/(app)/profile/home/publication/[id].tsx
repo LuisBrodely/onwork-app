@@ -12,10 +12,13 @@ import { Publication } from "@/features/publications/data/interfaces/publication
 import { Image } from "expo-image";
 import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
 import { formatDate } from "@/shared/utils/util";
+import { FAB } from "react-native-paper";
+import { useRouter } from "expo-router";
 
 const PublicationScreen = () => {
   const { id } = useLocalSearchParams();
   const { user } = useSessionStore();
+  const router = useRouter();
   const [publication, setPublication] = useState<Publication | null>();
 
   const { getPublicationByUuid, isLoading } = usePublicationStore();
@@ -40,42 +43,54 @@ const PublicationScreen = () => {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-    >
-      <View>
-        {publication && (
-          <>
-            <Image
-              style={{ width: "100%", height: 300 }}
-              source={{ uri: publication.url_image }}
-            />
-            <View style={styles.box}>
-              <View style={styles.profile}>
-                <Image
-                  style={styles.profileImage}
-                  source={{
-                    uri: user?.image_url,
-                  }}
-                />
-                <View>
-                  <Text style={styles.name}>{user?.name}</Text>
-                  <Text style={styles.lastName}>
-                    {formatDate(publication?.createdAt)}
-                  </Text>
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        <View>
+          {publication && (
+            <>
+              <Image
+                style={{ width: "100%", height: 300 }}
+                source={{ uri: publication.url_image }}
+              />
+              <View style={styles.box}>
+                <View style={styles.profile}>
+                  <Image
+                    style={styles.profileImage}
+                    source={{
+                      uri: user?.image_url,
+                    }}
+                  />
+                  <View>
+                    <Text style={styles.name}>{user?.name}</Text>
+                    <Text style={styles.lastName}>
+                      {formatDate(publication?.createdAt)}
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-            <View style={styles.post}>
-              <Text style={styles.title}>{publication.title}</Text>
-              <Text style={styles.subtitle}>{publication.description}</Text>
-            </View>
-          </>
-        )}
-      </View>
-    </ScrollView>
+              <View style={styles.post}>
+                <Text style={styles.title}>{publication.title}</Text>
+                <Text style={styles.subtitle}>{publication.description}</Text>
+              </View>
+            </>
+          )}
+        </View>
+      </ScrollView>
+      <FAB
+        icon="arrow-left"
+        size="small"
+        style={styles.fab}
+        mode="flat"
+        color="#FFF"
+        onPress={() => {
+          router.back();
+        }}
+      />
+    </View>
   );
 };
 
@@ -83,6 +98,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  fab: {
+    position: "absolute",
+    margin: 24,
+    left: 0,
+    top: 0,
+    borderRadius: 100,
+    backgroundColor: "#FF5C69",
   },
   profileImage: {
     width: 100,
