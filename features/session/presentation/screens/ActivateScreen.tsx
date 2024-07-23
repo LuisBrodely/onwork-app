@@ -5,12 +5,14 @@ import { StatusBar } from 'expo-status-bar'
 import { OtpInput } from 'react-native-otp-entry'
 import { ActivateModel } from '../../domain/models/session.model'
 import { useSessionStore } from '../controllers/useSessionStore'
+import { Button } from 'react-native-paper'
+import Logo from '@/shared/components/Logo'
 
 export const ActivateScreen = () => {
-    const { activate } = useSessionStore();
+    const { activate, user } = useSessionStore();
 
     const [activateData, setActivateData] = useState<ActivateModel>({
-        uuid: '',
+        uuid: user?.uuid || '',
         token: ''
     });
 
@@ -24,11 +26,18 @@ export const ActivateScreen = () => {
             Alert.alert("Error al activar la cuenta");
         }
     };
-    
+
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#F1F1F1", alignItems: 'center', justifyContent: 'center' }}>
-            <View style={{ marginHorizontal: 32 }}>
-                <StatusBar hidden />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF", alignItems: 'center', justifyContent: 'center' }}>
+            <Image
+                source={require('@/assets/images/logo.png')}
+                style={{
+                    width: 46,
+                    height: 46,
+                }}
+            />
+            <View style={{ marginHorizontal: 24 }}>
+                <StatusBar />
                 <View style={styles.container}>
                     <Text style={styles.title}>Activa tu cuenta</Text>
                     <Text style={styles.subtitle}>Ingresa el código de verificación que recibiste en tu correo electrónico.</Text>
@@ -37,7 +46,7 @@ export const ActivateScreen = () => {
                     <OtpInput
                         numberOfDigits={6}
                         onTextChange={(token) => setActivateData({ ...activateData, token })}
-                        focusColor={"#5DC3B2"}
+                        focusColor={"#EF3166"}
                         focusStickBlinkingDuration={400}
                         disabled={false}
                         theme={{
@@ -51,12 +60,14 @@ export const ActivateScreen = () => {
                         }}
                     />
                 </View>
-                <TouchableOpacity
-                    style={styles.button}
+                <Button
+                    mode="contained"
+                    buttonColor="#EF3166"
                     onPress={() => handleActivate(activateData)}
+                    style={{ marginTop: 32 }}
                 >
-                    <Text style={{ fontWeight: 'bold', color: '#fff', fontSize: 18 }}>Enviar</Text>
-                </TouchableOpacity>
+                    <Text style={{ fontWeight: '600', color: '#fff', fontSize: 16 }}>Activar cuenta</Text>
+                </Button>
             </View>
         </SafeAreaView>
     )
@@ -65,7 +76,8 @@ export const ActivateScreen = () => {
 const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 32,
     },
     button: {
         backgroundColor: '#5DC3B2',
@@ -76,7 +88,7 @@ const styles = StyleSheet.create({
         marginTop: 32,
     },
     title: {
-        fontSize: 36,
+        fontSize: 28,
         fontWeight: '700',
         marginBottom: 20
     },

@@ -35,7 +35,7 @@ export default CustomButton
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
+    backgroundColor: '#2E2E2E',
     padding: 10,
     borderRadius: 100,
     justifyContent: 'center',

@@ -65,7 +65,7 @@ const RenderItem = ({ item, index, x }: Props) => {
           style={[{ width: SCREEN_WIDTH * 0.9, height: SCREEN_WIDTH * 0.9 }, { resizeMode: 'contain' }]}
         />
         <Text style={[styles.itemText, { color: item.textColor }]}>{item.text}</Text>
-        <Text style={[styles.subitemText, { color: item.textColor }]}>{item.subtitle}</Text>
+        <Text style={[styles.subitemText, { color: item.subcolor }]}>{item.subtitle}</Text>
       </Animated.View>
     </View>
   )
