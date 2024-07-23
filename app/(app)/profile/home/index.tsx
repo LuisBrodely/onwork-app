@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
-import { StatusBar } from "expo-status-bar";
 import { Octicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import {
@@ -98,7 +97,7 @@ const ProfileScreen = () => {
               <Pressable
                 style={styles.profileBadge}
                 onPress={() => {
-                  router.push("/profile/home/chat");
+                  router.push(`/provider/home/chat/${user?.uuid}`);
                 }}
               >
                 <Text style={styles.profileStars}>Contactar</Text>

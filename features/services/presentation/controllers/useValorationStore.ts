@@ -9,12 +9,14 @@ import {
   GetServicesByProviderModel 
 } from "../../domain/models/service.model";
 import { Service } from "../../data/interfaces/service.interface";
+import { GetServiceByUuidUseCase } from "../../domain/usecases/service.usecase.get-by-uuid";
 
 const serviceRepository = new ServiceRepositoryImpl();
 
 const createServiceUseCase = new CreateServiceUseCase(serviceRepository);
 const getServicesByProviderUseCase = new GetServicesByProviderUseCase(serviceRepository);
 const deleteServiceUseCase = new DeleteServiceUseCase(serviceRepository);
+const getServiceByUuidUseCase = new GetServiceByUuidUseCase(serviceRepository);
 
 interface ServiceState {
   myServices: Service[];
@@ -26,6 +28,7 @@ interface ServiceState {
 
   createService: (service: CreateServiceModel) => Promise<boolean>;
   getServicesByProvider: (providerModel: GetServicesByProviderModel) => Promise<Service[]>;
+  getServiceByUuid: (uuidModel: ServiceUuidModel) => Promise<Service>;
   deleteService: (uuidModel: ServiceUuidModel) => Promise<boolean>;
 }
 
@@ -74,6 +77,25 @@ export const useServiceStore = create<ServiceState>((set, get) => ({
     } catch (error) {
       set({ error });
       return [];
+    } finally {
+      setIsLoading(false);
+    }
+  },
+
+  getServiceByUuid: async (uuidModel: ServiceUuidModel) => {
+    const { setIsLoading } = get();
+    try {
+      setIsLoading(true);
+      const response = await getServiceByUuidUseCase.execute(uuidModel);
+
+      if (response.success) {
+        return response.data as Service;
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      set({ error });
+      return {} as Service;
     } finally {
       setIsLoading(false);
     }

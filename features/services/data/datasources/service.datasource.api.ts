@@ -63,3 +63,20 @@ export const getServicesByProvider = async (
     throw new Error(error.message);
   }
 };
+
+export const getServiceByUuid = async (request: ServiceUuidModel) => {
+  try {
+    const response = await OnWorkApi.get<ServiceResponse>(
+      `services/${request.uuid}`
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message);
+    }
+  } catch (err) {
+    const error = err as AxiosError;
+    throw new Error(error.message);
+  }
+}

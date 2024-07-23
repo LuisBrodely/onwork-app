@@ -172,6 +172,13 @@ export default function HomeScreen() {
           </Text>
         </Pressable>
       </View>
+
+      <View style={{...styles.sectionContainer, marginTop: 24 }}>
+        <Text style={styles.sectionTitle}>Cerca de ti</Text>
+        <TouchableOpacity>
+          <Text style={styles.sectionSubtitle}>Ver todas</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -179,7 +186,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Constants.statusBarHeight + 40,
+    paddingTop: Constants.statusBarHeight + 36,
     paddingHorizontal: 24,
     backgroundColor: "#fff",
   },

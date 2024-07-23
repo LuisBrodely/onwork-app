@@ -10,6 +10,7 @@ export default function Layout() {
         }}
       />
       <Stack.Screen name="create" />
+      <Stack.Screen name="[id]" />
     </Stack>
   );
 }

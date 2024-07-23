@@ -74,7 +74,7 @@ const ValorationsScreen = () => {
                   marginTop: 8
                 }}
                 onPress={() => {
-                  console.log("Pagar");
+                  router.push(`/profile/services/${item.uuid}`);
                 }}
               >
                 <Text style={{
