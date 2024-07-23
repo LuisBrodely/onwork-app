@@ -81,13 +81,13 @@ const styles = StyleSheet.create({
     marginBottom: 120,
   },
   itemText: {
-    fontSize: 39,
+    fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 10,
     marginHorizontal: 20,
   },
   subitemText: {
-    fontSize: 20,
+    fontSize: 16,
     marginHorizontal: 20,
     fontWeight: '500',
     marginTop: 15,

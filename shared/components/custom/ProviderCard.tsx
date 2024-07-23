@@ -8,14 +8,14 @@ interface ProviderCardProps {
 
 const tagColors: { [key: string]: string } = {
   "Pintura": "#F5D867",
-  "Ensamblaje": "#D3F567",
-  "Informática": "#67F5D3",
-  "Trabajo de Jardinería": "#A3F567",
-  "Fontanería": "#67A3F5",
-  "Asistencia en Eventos": "#D367F5",
-  "Cuidado de Mascotas": "#F567A3",
-  "Fotografía": "#F5A367",
-  "Organización del Hogar": "#67F5A3",
+  "Ensamblaje": "#6A4BC2",
+  "Informática": "#B54D6A",
+  "Trabajo de Jardinería": "#39808A",
+  "Fontanería": "#5B58E0",
+  "Asistencia en Eventos": "#F59B75",
+  "Cuidado de Mascotas": "#5C93FF",
+  "Fotografía": "#FF6A5C",
+  "Organización del Hogar": "#EF3166",
   // Agrega más tags y colores según necesites
 };
 
