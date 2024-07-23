@@ -6,10 +6,34 @@ interface ProviderCardProps {
   provider: Provider;
 }
 
+const tagColors: { [key: string]: string } = {
+  "Pintura": "#F5D867",
+  "Ensamblaje": "#D3F567",
+  "Informática": "#67F5D3",
+  "Trabajo de Jardinería": "#A3F567",
+  "Fontanería": "#67A3F5",
+  "Asistencia en Eventos": "#D367F5",
+  "Cuidado de Mascotas": "#F567A3",
+  "Fotografía": "#F5A367",
+  "Organización del Hogar": "#67F5A3",
+  // Agrega más tags y colores según necesites
+};
+
+const getHeaderColor = (tags: any) => {
+  for (let tag of tags) {
+    if (tagColors[tag.title]) {
+      return tagColors[tag.title];
+    }
+  }
+  return 'red'; // color por defecto si no hay coincidencia de tags
+};
+
 export const ProviderCard = ({ provider }: ProviderCardProps) => {
+  const headerColor = getHeaderColor(provider.tags);
+
   return (
     <View style={styles.card}>
-      <View style={[styles.header, { backgroundColor: 'red' }]}>
+      <View style={[styles.header, { backgroundColor: headerColor }]}>
         <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center' }}>
           <Entypo name="star" size={16} color="white" />
           <Text style={{ color: 'white' }}>{provider.latitude}</Text>

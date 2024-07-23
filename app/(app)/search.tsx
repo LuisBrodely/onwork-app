@@ -1,20 +1,18 @@
-import { View, Text, Pressable, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, FlatList } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  BottomSheet,
-  BottomSheetMethods,
-} from "@/shared/components/BottomSheet";
+import { BottomSheet, BottomSheetMethods } from "@/shared/components/BottomSheet";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CategoryList } from "@/shared/components/(modals)/CategoryList";
 import { DistanceList } from "@/shared/components/(modals)/DistanceList";
 import { PriceList } from "@/shared/components/(modals)/PriceList";
 import { Searchbar, Button } from "react-native-paper";
-import Cards from "@/shared/components/Cards";
 import { useProviderStore } from "@/features/providers/presentation/controllers/useProviderStore";
+import { ProviderCard } from "@/shared/components/custom/ProviderCard";
 
 export default function Search() {
   const { providers, getProviders } = useProviderStore();
   const [searchQuery, setSearchQuery] = useState("");
+  const [filteredProviders, setFilteredProviders] = useState(providers);
   const bottomSheetCategoriesRef = useRef<BottomSheetMethods>(null);
   const bottomSheetPricesRef = useRef<BottomSheetMethods>(null);
   const bottomSheetDistancesRef = useRef<BottomSheetMethods>(null);
@@ -35,11 +33,37 @@ export default function Search() {
     getProviders();
   }, []);
 
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = providers.filter(provider =>
+        provider.tags.some(tag => tag.title.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+      setFilteredProviders(filtered);
+    } else {
+      setFilteredProviders(providers);
+    }
+  }, [searchQuery, providers]);
+
+  const groupProvidersByCategory = (providers) => {
+    const groupedProviders = {};
+
+    providers.forEach(provider => {
+      provider.tags.forEach(tag => {
+        if (!groupedProviders[tag.title]) {
+          groupedProviders[tag.title] = [];
+        }
+        groupedProviders[tag.title].push(provider);
+      });
+    });
+
+    return groupedProviders;
+  };
+
+  const groupedProviders = groupProvidersByCategory(filteredProviders);
+
   return (
     <View style={{ flex: 1 }}>
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: "white", paddingHorizontal: 24 }}
-      >
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white", paddingHorizontal: 24 }}>
         <Searchbar
           placeholder="Buscar personal"
           onChangeText={setSearchQuery}
@@ -93,36 +117,29 @@ export default function Search() {
             </Button>
           </ScrollView>
         </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{ marginHorizontal: -24 }}
-        >
-          <View>
-            <Text
-              style={{
-                paddingTop: 24,
-                paddingHorizontal: 24,
-                fontWeight: "700",
-                fontSize: 22,
-              }}
-            >
-              Reparación
-            </Text>
-            <Cards />
-          </View>
-          <View>
-            <Text
-              style={{
-                paddingTop: 24,
-                paddingHorizontal: 24,
-                fontWeight: "700",
-                fontSize: 22,
-              }}
-            >
-              Hogar
-            </Text>
-            <Cards />
-          </View>
+        <ScrollView showsVerticalScrollIndicator={false} style={{ marginHorizontal: -24 }}>
+          {Object.keys(groupedProviders).map((category, index) => (
+            <View key={index}>
+              <Text
+                style={{
+                  paddingTop: 24,
+                  paddingHorizontal: 24,
+                  fontWeight: "700",
+                  fontSize: 22,
+                }}
+              >
+                {category}
+              </Text>
+              <FlatList
+                data={groupedProviders[category]}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => <ProviderCard provider={item} />}
+                keyExtractor={(item) => item.uuid}
+                contentContainerStyle={styles.listContainer}
+              />
+            </View>
+          ))}
         </ScrollView>
         <BottomSheet
           snapTo={"50%"}
@@ -170,5 +187,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#9C9C9C",
+  },
+  listContainer: {
+    marginTop: 20,
   },
 });
