@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import React from 'react'
+import { useProviderStore } from '@/features/providers/presentation/controllers/useProviderStore';
 
 const categories = [
   { key: "1", name: 'Cerrajero', icon: '🔑' },
@@ -36,6 +37,10 @@ const CategoryItem = ({ name, icon }: any) => (
 );
 
 export const CategoryList = () => {
+
+  const { providers, getProviders } = useProviderStore();
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Categorías</Text>
