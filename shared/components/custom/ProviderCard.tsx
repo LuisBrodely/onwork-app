@@ -1,5 +1,7 @@
 import { Provider } from "@/features/providers/data/interfaces/provider.interface";
+import { useProviderStore } from "@/features/providers/presentation/controllers/useProviderStore";
 import { Entypo } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 
 interface ProviderCardProps {
@@ -30,6 +32,8 @@ const getHeaderColor = (tags: any) => {
 
 export const ProviderCard = ({ provider }: ProviderCardProps) => {
   const headerColor = getHeaderColor(provider.tags);
+  const { setSelectedUuidProvider } = useProviderStore();
+  const router = useRouter();
 
   return (
     <View style={styles.card}>
@@ -47,7 +51,14 @@ export const ProviderCard = ({ provider }: ProviderCardProps) => {
         <Text style={styles.jobs}>+{provider.tags.length} Categorias</Text>
         <Text style={styles.description}>{provider.description}</Text>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.profileButton}>
+          <TouchableOpacity style={styles.profileButton}
+            onPress={
+              () => {
+                setSelectedUuidProvider(provider.uuid);
+                router.push("provider");
+              }
+            }
+          >
             <Text style={styles.profileButtonText}>Ver perfil</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.contactButton}>
