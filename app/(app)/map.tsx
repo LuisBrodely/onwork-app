@@ -2,7 +2,7 @@ import { StyleSheet, View, Text } from "react-native";
 import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
 
 export default function ProfileScreen() {
-  const { signOut, user } = useSessionStore();
+  const { user } = useSessionStore();
 
   return (
     <View style={styles.container}>

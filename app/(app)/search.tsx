@@ -39,7 +39,7 @@ export default function Search() {
         />
         <View style={{ marginTop: 12 }}>
           <ScrollView
-            style={{ marginHorizontal: -24 }}
+            style={{ marginHorizontal: -24, paddingBottom: 20, borderBottomColor: '#DEDEDE', borderBottomWidth: 1 }}
             horizontal
             showsHorizontalScrollIndicator={false}
           >
@@ -78,12 +78,20 @@ export default function Search() {
             </Button>
           </ScrollView>
         </View>
-        <View style={{ marginHorizontal: -24 }}>
-          <Text style={{ paddingTop: 24, paddingHorizontal: 24, fontWeight: '700', fontSize: 22 }}>
-            Reparación
-          </Text>
-          <Cards />
-        </View>
+        <ScrollView showsVerticalScrollIndicator={false} style={{ marginHorizontal: -24 }}>
+          <View>
+            <Text style={{ paddingTop: 24, paddingHorizontal: 24, fontWeight: '700', fontSize: 22 }}>
+              Reparación
+            </Text>
+            <Cards />
+          </View>
+          <View>
+            <Text style={{ paddingTop: 24, paddingHorizontal: 24, fontWeight: '700', fontSize: 22 }}>
+              Hogar
+            </Text>
+            <Cards />
+          </View>
+        </ScrollView>
         <BottomSheet
           snapTo={'50%'}
           ref={bottomSheetCategoriesRef}
