@@ -14,6 +14,7 @@ export default function Search() {
   const { providers, getProviders } = useProviderStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProviders, setFilteredProviders] = useState<Provider[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const bottomSheetCategoriesRef = useRef<BottomSheetMethods>(null);
   const bottomSheetPricesRef = useRef<BottomSheetMethods>(null);
   const bottomSheetDistancesRef = useRef<BottomSheetMethods>(null);
@@ -61,6 +62,17 @@ export default function Search() {
   };
 
   const groupedProviders = groupProvidersByCategory(filteredProviders);
+
+  const handleCategorySelect = (selectedCategories: string[]) => {
+    setSelectedCategories(selectedCategories);
+  };
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setSearchQuery("");
+  };
+
+  const categoriesToShow = selectedCategories.length > 0 ? selectedCategories : Object.keys(groupedProviders);
 
   return (
     <View style={{ flex: 1 }}>
@@ -116,10 +128,22 @@ export default function Search() {
             >
               <Text style={styles.buttonText}>Distancia</Text>
             </Button>
+            <Button
+              icon="close"
+              mode="outlined"
+              style={styles.button}
+              buttonColor="#FFF"
+              textColor="#9C9C9C"
+              onPress={clearFilters}
+            >
+              <Text style={styles.buttonText}>
+                Eliminar filtros
+              </Text>
+            </Button>
           </ScrollView>
         </View>
         <ScrollView showsVerticalScrollIndicator={false} style={{ marginHorizontal: -24 }}>
-          {Object.keys(groupedProviders).map((category, index) => (
+          {categoriesToShow.map((category, index) => (
             <View key={index}>
               <Text
                 style={{
@@ -131,14 +155,18 @@ export default function Search() {
               >
                 {category}
               </Text>
-              <FlatList
-                data={groupedProviders[category]}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => <ProviderCard provider={item} />}
-                keyExtractor={(item) => item.uuid}
-                contentContainerStyle={styles.listContainer}
-              />
+              {groupedProviders[category] && groupedProviders[category].length > 0 ? (
+                <FlatList
+                  data={groupedProviders[category]}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => <ProviderCard provider={item} />}
+                  keyExtractor={(item) => item.uuid}
+                  contentContainerStyle={styles.listContainer}
+                />
+              ) : (
+                <Text style={styles.noDataText}>Lo sentimos, no hay trabajadores para esta área</Text>
+              )}
             </View>
           ))}
         </ScrollView>
@@ -148,7 +176,7 @@ export default function Search() {
           backgroundColor="white"
           backDropColor="black"
         >
-          <CategoryList />
+          <CategoryList onSelect={handleCategorySelect} />
         </BottomSheet>
         <BottomSheet
           snapTo={"40%"}
@@ -192,5 +220,11 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     marginTop: 20,
+  },
+  noDataText: {
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    fontSize: 16,
+    color: "#9C9C9C",
   },
 });

@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTagStore } from '@/features/tags/presentation/controllers/useTagsStore';
 
 const iconDictionary: { [key: string]: string } = {
@@ -23,8 +23,8 @@ const iconDictionary: { [key: string]: string } = {
   'Informática': '💻',
 };
 
-const CategoryItem = ({ name, icon }: { name: string, icon: string }) => (
-  <TouchableOpacity style={styles.categoryContainer}>
+const CategoryItem = ({ name, icon, isSelected, onPress }: { name: string, icon: string, isSelected: boolean, onPress: () => void }) => (
+  <TouchableOpacity style={[styles.categoryContainer, isSelected && styles.selectedCategoryContainer]} onPress={onPress}>
     <Text style={styles.icon}>{icon}</Text>
     <Text style={styles.categoryText}>{name}</Text>
   </TouchableOpacity>
@@ -38,12 +38,25 @@ const splitArrayIntoChunks = (array: any[], chunkSize: number) => {
   return chunks;
 };
 
-export const CategoryList = () => {
+export const CategoryList = ({ onSelect }: { onSelect: (selectedCategories: string[]) => void }) => {
   const { getTags, tags } = useTagStore();
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   useEffect(() => {
     getTags();
   }, [getTags]);
+
+  const handleCategoryPress = (category: string) => {
+    setSelectedCategories(prevSelected =>
+      prevSelected.includes(category)
+        ? prevSelected.filter(item => item !== category)
+        : [...prevSelected, category]
+    );
+  };
+
+  useEffect(() => {
+    onSelect(selectedCategories);
+  }, [selectedCategories, onSelect]);
 
   const groupedTags = splitArrayIntoChunks(tags, 6);
 
@@ -56,7 +69,14 @@ export const CategoryList = () => {
           <FlatList
             data={item}
             horizontal
-            renderItem={({ item }) => <CategoryItem name={item.title} icon={iconDictionary[item.title]} />}
+            renderItem={({ item }) => (
+              <CategoryItem
+                name={item.title}
+                icon={iconDictionary[item.title]}
+                isSelected={selectedCategories.includes(item.title)}
+                onPress={() => handleCategoryPress(item.title)}
+              />
+            )}
             keyExtractor={item => item.uuid}
             contentContainerStyle={styles.listContainer}
             showsHorizontalScrollIndicator={false}
@@ -89,6 +109,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,
+  },
+  selectedCategoryContainer: {
+    backgroundColor: '#EF316675',
   },
   icon: {
     fontSize: 24,

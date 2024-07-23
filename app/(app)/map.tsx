@@ -61,7 +61,6 @@ export default function ProfileScreen() {
   }, [location]);
 
 
-
   return (
     <View style={styles.containerGlobal}>
       <MapView
