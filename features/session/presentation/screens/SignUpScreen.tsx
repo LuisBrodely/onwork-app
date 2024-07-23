@@ -7,9 +7,11 @@ import { Link } from "expo-router";
 import Logo from "@/shared/components/Logo";
 import { Button } from "react-native-paper";
 import Constants from "expo-constants";
+import { useRouter } from "expo-router";
 
 export const SignUpScreen = () => {
   const { signUp } = useSessionStore();
+  const router = useRouter();
   const [signUpData, setSignUpData] = useState<SignUpModel>({
     name: "Leonardo",
     lastName: "Toledo",
@@ -30,6 +32,7 @@ export const SignUpScreen = () => {
       Alert.alert("Error al registrarse");
     } else {
       Alert.alert("Usuario registrado");
+      router.push("/activate");
     }
   };
 

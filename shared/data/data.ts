@@ -16,28 +16,28 @@ const data: OnBoardingData[] = [
     id: 1,
     animation: require('@/assets/images/onboarding-1.svg'),
     text: 'La Dificultad en la Contratación.',
-    textColor: '#FF6A5C',
+    textColor: '#F3766A',
     backgroundColor: '#201F1F',
     subtitle: 'La contratación de personal es un proceso largo y tedioso, OnWork te ayuda a simplificarlo.',
-    subcolor: "#F1F1F1"
+    subcolor: "#CFCFCF"
   },
   {
     id: 2,
     animation: require('@/assets/images/onboarding-2.svg'),
     text: 'La Solución de OnWork.',
-    textColor: '#EF3166',
+    textColor: '#CF5275',
     backgroundColor: '#f1f1f1',
     subtitle: 'OnWork es una plataforma que te permite encontrar personal de manera rápida y sencilla.',
-    subcolor: "#EF3166"
+    subcolor: "#8A8A8A"
   },
   {
     id: 3,
     animation: require('@/assets/images/onboarding-3.svg'),
     text: '¿Por qué elegir OnWork?.',
-    textColor: '#5DC3B2',
+    textColor: '#4B8178',
     backgroundColor: '#201F1F',
     subtitle: 'OnWork te permite encontrar personal calificado y con experiencia en el área que necesitas en cuestión de minutos.',
-    subcolor: "#F1F1F1"
+    subcolor: "#CFCFCF"
   },
 ]
 

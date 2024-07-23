@@ -6,7 +6,6 @@ import { OtpInput } from 'react-native-otp-entry'
 import { ActivateModel } from '../../domain/models/session.model'
 import { useSessionStore } from '../controllers/useSessionStore'
 import { Button } from 'react-native-paper'
-import Logo from '@/shared/components/Logo'
 
 export const ActivateScreen = () => {
     const { activate, user } = useSessionStore();
@@ -17,6 +16,7 @@ export const ActivateScreen = () => {
     });
 
     const handleActivate = async (activateModel: ActivateModel) => {
+        console.log(activateModel.uuid, activateModel.token);
         if (!activateModel.uuid || !activateModel.token) {
             Alert.alert("Rellena los campos");
             return;

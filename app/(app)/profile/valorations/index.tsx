@@ -8,7 +8,7 @@ import { useUserStore } from "@/features/users/presentation/controllers/useUserS
 import { User } from "@/features/session/data/interfaces/session.interface";
 
 const ValorationsScreen = () => {
-  const { myValorations } = useValorationStore();
+  const { myValorations, myValorationsSerie } = useValorationStore();
   const { getUsers } = useUserStore();
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
@@ -28,6 +28,10 @@ const ValorationsScreen = () => {
 
   return (
     <View style={styles.container}>
+      {myValorationsSerie?.map((serie) => {
+        return <Image source={{ uri: serie.s3_url }} style={{ width: 100, height: 100 }} />;
+      })}
+
       {myValorations.length === 0 && (
         <Text
           style={{
@@ -40,80 +44,80 @@ const ValorationsScreen = () => {
         </Text>
       )}
 
-      {myValorations && 
+      {myValorations &&
         <FlatList
-        horizontal={false}
-        data={myValorations}
-        keyExtractor={(item) => item.uuid}
-        showsHorizontalScrollIndicator={false}
-        style={{ paddingTop: 24 }}
-        renderItem={({ item }) => {
-          const user = getUserByUuid(item.user_uuid);
+          horizontal={false}
+          data={myValorations}
+          keyExtractor={(item) => item.uuid}
+          showsHorizontalScrollIndicator={false}
+          style={{ paddingTop: 24 }}
+          renderItem={({ item }) => {
+            const user = getUserByUuid(item.user_uuid);
 
-          return (
-            <View style={{ marginBottom: 20 }}>
-              <View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Image
-                    source={{ uri: user?.image_url }}
+            return (
+              <View style={{ marginBottom: 20 }}>
+                <View>
+                  <View
                     style={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: 50,
-                      backgroundColor: "gray",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
                     }}
-                  />
-                  <View>
-                    <Text style={{ fontSize: 14, fontWeight: "600" }}>
-                      {user?.name || "Nombre del usuario"}
-                    </Text>
-                    <View
+                  >
+                    <Image
+                      source={{ uri: user?.image_url }}
                       style={{
-                        marginTop: 4,
-                        backgroundColor: "#EF3166",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: 20,
-                        padding: 3,
-                        width: 80,
+                        width: 44,
+                        height: 44,
+                        borderRadius: 50,
+                        backgroundColor: "gray",
                       }}
-                    >
-                      <Text
+                    />
+                    <View>
+                      <Text style={{ fontSize: 14, fontWeight: "600" }}>
+                        {user?.name || "Nombre del usuario"}
+                      </Text>
+                      <View
                         style={{
-                          color: "#FFF",
-                          fontSize: 10,
-                          fontWeight: "bold",
+                          marginTop: 4,
+                          backgroundColor: "#EF3166",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderRadius: 20,
+                          padding: 3,
+                          width: 80,
                         }}
                       >
-                        {item.general_review}
-                      </Text>
+                        <Text
+                          style={{
+                            color: "#FFF",
+                            fontSize: 10,
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {item.general_review}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "400",
+                    color: "#666",
+                    marginTop: 10,
+                    fontStyle: "italic",
+                    marginRight: 14,
+                  }}
+                >
+                  {`"${item.comment}"`}
+                </Text>
+                <Divider style={{ marginTop: 24 }} />
               </View>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: "400",
-                  color: "#666",
-                  marginTop: 10,
-                  fontStyle: "italic",
-                  marginRight: 14,
-                }}
-              >
-                {`"${item.comment}"`}
-              </Text>
-              <Divider style={{ marginTop: 24 }} />
-            </View>
-          );
-        }}
-      />}
+            );
+          }}
+        />}
 
       <FAB
         icon="plus"

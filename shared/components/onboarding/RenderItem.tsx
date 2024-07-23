@@ -82,14 +82,14 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: '700',
     marginBottom: 10,
     marginHorizontal: 20,
   },
   subitemText: {
-    fontSize: 16,
+    fontSize: 18,
     marginHorizontal: 20,
-    fontWeight: '500',
+    fontWeight: '600',
     marginTop: 15,
   },
   circleContainer: {

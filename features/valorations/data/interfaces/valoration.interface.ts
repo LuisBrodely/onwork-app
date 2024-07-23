@@ -22,3 +22,20 @@ export interface Valoration {
   createdAt:      Date;
   updatedAt:      Date;
 }
+
+
+export interface ValorationSerieResponse {
+  data:        DataTime[];
+  message:     string;
+  status:      boolean;
+  status_code: number;
+}
+
+export interface DataTime {
+  success: boolean;
+  x:      string[];
+  y:      number[];
+  x_pred: string[];
+  y_pred: number[];
+  s3_url:  string;
+}

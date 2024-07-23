@@ -2,6 +2,7 @@ import { OnWorkApi } from "@/shared/config/OnWorkApi";
 import { AxiosError } from "axios";
 import {
   ValorationResponse,
+  ValorationSerieResponse,
   ValorationsResponse,
 } from "../interfaces/valoration.interface";
 import {
@@ -9,6 +10,7 @@ import {
   ValorationUuidModel,
   GetValorationsByProviderModel,
   GetValorationsByUserModel,
+  GetValorationsSerieByUserModel,
 } from "../../domain/models/valoration.model";
 
 export const createValoration = async (request: CreateValorationModel) => {
@@ -83,3 +85,20 @@ export const getValorationsByUser = async (
     throw new Error(error.message);
   }
 };
+
+export const getValorationsSerieByUser = async (request: GetValorationsSerieByUserModel) => {
+  try {
+    const response = await OnWorkApi.get<ValorationSerieResponse>(
+      `valorations/serie/user/${request.uuid}/days/${request.days}`
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message);
+    }
+  } catch (err) {
+    const error = err as AxiosError;
+    throw new Error(error.message);
+  }
+}

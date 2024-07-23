@@ -83,7 +83,7 @@ export default function ProfileScreen() {
                   textAlign: 'center',
                   fontWeight: 'bold',
                 }}>
-                {user.tags[0].title}
+                {user?.tags.length > 0 ? user?.tags[0].title : user.name}
               </Text>
             </View>
           </Marker>

@@ -11,9 +11,13 @@ export interface GetValorationsByProviderModel {
 
 export interface GetValorationsByUserModel {
   uuid: string;
-
 }
 
 export interface ValorationUuidModel {
   uuid: string;
+}
+
+export interface GetValorationsSerieByUserModel {
+  uuid: string;
+  days: number
 }

@@ -3,36 +3,40 @@ import { ValorationRepositoryImpl } from "../../data/repositories/valoration.rep
 import { CreateValorationUseCase } from "../../domain/usecases/valoration.usecase.create";
 import { GetValorationsByProviderUseCase } from "../../domain/usecases/valoration.usecase.get-by-uuid-provider";
 import { DeleteValorationUseCase } from "../../domain/usecases/valoration.usecase.delete";
-import { 
-  CreateValorationModel, 
-  ValorationUuidModel, 
-  GetValorationsByProviderModel, 
-  GetValorationsByUserModel
+import { GetValorationsSerieByUserUseCase } from "../../domain/usecases/valoration.usecase.get-series";
+import {
+  CreateValorationModel,
+  ValorationUuidModel,
+  GetValorationsByProviderModel,
+  GetValorationsByUserModel,
+  GetValorationsSerieByUserModel
 } from "../../domain/models/valoration.model";
-import { Valoration } from "../../data/interfaces/valoration.interface";
+import { Valoration, DataTime } from "../../data/interfaces/valoration.interface";
 
 const valorationRepository = new ValorationRepositoryImpl();
 
 const createValorationUseCase = new CreateValorationUseCase(valorationRepository);
 const getValorationsByProviderUseCase = new GetValorationsByProviderUseCase(valorationRepository);
 const deleteValorationUseCase = new DeleteValorationUseCase(valorationRepository);
+const getValorationsSerieByUserUseCase = new GetValorationsSerieByUserUseCase(valorationRepository);
 
 interface ValorationState {
   myValorations: Valoration[];
   isLoading: boolean;
   error?: Error | null | unknown;
-
+  myValorationsSerie: DataTime[];
   setIsLoading: (isLoading: boolean) => void;
   setMyValorations: (valorations: Valoration[]) => void;
-
   createValoration: (valoration: CreateValorationModel) => Promise<boolean>;
   getValorationsByProvider: (providerModel: GetValorationsByProviderModel) => Promise<Valoration[]>;
   getValorationsByUser: (userModel: GetValorationsByUserModel) => Promise<Valoration[]>;
   deleteValoration: (uuidModel: ValorationUuidModel) => Promise<boolean>;
+  getValorationsSerieByUserUseCase: (getValorationsSerieByUserModel: GetValorationsSerieByUserModel) => Promise<DataTime[]>;
 }
 
 export const useValorationStore = create<ValorationState>((set, get) => ({
   myValorations: [],
+  myValorationsSerie: [],
   isLoading: false,
   error: null,
 
@@ -41,6 +45,9 @@ export const useValorationStore = create<ValorationState>((set, get) => ({
   },
   setMyValorations: (myValorations: Valoration[]) => {
     set({ myValorations });
+  },
+  setMyValorationsSerie: (myValorationsSerie: DataTime[]) => {
+    set({ myValorationsSerie });
   },
 
   createValoration: async (valoration: CreateValorationModel) => {
@@ -118,4 +125,25 @@ export const useValorationStore = create<ValorationState>((set, get) => ({
       setIsLoading(false);
     }
   },
+
+  getValorationsSerieByUserUseCase: async (getValorationsSerieByUserModel: GetValorationsSerieByUserModel) => {
+    const { setIsLoading } = get();
+    try {
+      setIsLoading(true);
+      const response = await getValorationsSerieByUserUseCase.execute(getValorationsSerieByUserModel);
+
+      if (response.status) {
+        return response.data
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      set({ error });
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+
 }));
