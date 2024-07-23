@@ -28,14 +28,15 @@ const ProfileScreen = () => {
     useValorationStore();
   const { getPublicationsByUser, myPublications, setMyPublications } =
     usePublicationStore();
-  const { getServicesByProvider, setMyServices } =
-    useServiceStore();
+  const { getServicesByProvider, setMyServices } = useServiceStore();
 
   const router = useRouter();
 
   const fetchValorations = async () => {
     if (user) {
       const response = await getValorationsByProvider({ uuid: user.uuid });
+      console.log('userid', user.uuid);
+      console.log('VALORATIONS', response);
       setMyValorations(response);
     }
   };
@@ -60,7 +61,7 @@ const ProfileScreen = () => {
       const response = await getServicesByProvider({ uuid: user.uuid });
       setMyServices(response);
     }
-  }
+  };
 
   useEffect(() => {
     fetchServices();
@@ -126,7 +127,7 @@ const ProfileScreen = () => {
               <Text style={styles.statLabel}>Calificación</Text>
             </View>
             <View style={styles.stat}>
-              <Text style={styles.statNumber}>{myPublications.length}</Text>
+              <Text style={styles.statNumber}>{myValorations.length}</Text>
               <Text style={styles.statLabel}>Opiniones</Text>
             </View>
           </View>
@@ -218,8 +219,8 @@ const ProfileScreen = () => {
             />
           </View>
         </View>
+        <View style={{ height: 24 }}></View>
       </ScrollView>
-      <StatusBar style="dark" />
     </View>
   );
 };
@@ -280,7 +281,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
-    marginTop: 30,
+    marginTop: 22,
     paddingHorizontal: 18,
   },
   stat: {

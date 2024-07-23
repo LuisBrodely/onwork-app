@@ -5,6 +5,7 @@ import {
   useSessionStore,
 } from "@/features/session/presentation/controllers/useSessionStore";
 import { Redirect, Tabs } from "expo-router";
+import { Image } from "expo-image";
 
 export default function AppLayout() {
   const { status, user } = useSessionStore();
@@ -29,7 +30,6 @@ export default function AppLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
         tabBarStyle: { backgroundColor: "#FFF", borderTopWidth: 0 },
         tabBarActiveTintColor: "#FF3040",
         tabBarInactiveTintColor: "#4D4D4D",
@@ -67,6 +67,10 @@ export default function AppLayout() {
               {focused && <View style={styles.activeIndicator} />}
             </View>
           ),
+          headerTitle: () => <Image 
+            source={require("@/assets/images/logo-of.png")}
+            style={{ width: 36, height: 36 }}
+          />,
         }}
       />
       <Tabs.Screen
@@ -89,6 +93,7 @@ export default function AppLayout() {
               {focused && <View style={styles.activeIndicator} />}
             </View>
           ),
+          headerShown: false,
         }}
       />
     </Tabs>

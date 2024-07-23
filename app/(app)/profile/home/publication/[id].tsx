@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
   },
   box: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
   },
   profile: {
     flexDirection: "row",
@@ -138,8 +138,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   post: {
-    paddingHorizontal: 32,
-    marginTop: 16,
+    paddingHorizontal: 26,
+    marginTop: 14,
+    marginBottom: 24,
   },
   title: {
     fontSize: 22,
