@@ -67,7 +67,7 @@ export default function AppLayout() {
               {focused && <View style={styles.activeIndicator} />}
             </View>
           ),
-          headerTitle: () => <Image 
+          headerTitle: () => <Image
             source={require("@/assets/images/logo-of.png")}
             style={{ width: 36, height: 36 }}
           />,
@@ -82,6 +82,7 @@ export default function AppLayout() {
               {focused && <View style={styles.activeIndicator} />}
             </View>
           ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen

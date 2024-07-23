@@ -2,7 +2,7 @@ export interface ProviderResponse {
   data: Provider[];
   message: string;
   success: boolean;
-  status: number;
+  statusCode: number;
 }
 
 export interface Provider {

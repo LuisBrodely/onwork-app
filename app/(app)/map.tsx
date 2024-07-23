@@ -46,8 +46,6 @@ interface Location {
 }
 
 export default function ProfileScreen() {
-  const { user } = useSessionStore();
-
   const [users, setUsers] = useState<User[]>([]);
   const [location, setLocation] = useState<Location>({
     coords: {
@@ -78,9 +76,9 @@ export default function ProfileScreen() {
   let config = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: 'http://50.17.183.28:3000/api/v1/users/',
+    url: 'https://onwork-gateway.integrador.xyz/api/v1/users/',
     headers: {
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InRhZ3MiOlt7InV1aWQiOiIwMTlmNjkxNS1lZGJiLTRmZGItYWYzZi0wMmY1ODhiMjI0ZjIiLCJ0aXRsZSI6IkVuc2FtYmxhamUiLCJkZXNjcmlwdGlvbiI6Ik1vbnRhamUgZGUgbXVlYmxlcywgZXF1aXBvcyB5IG90cm9zIGFydMOtY3Vsb3MgcXVlIHJlcXVpZXJlbiBlbnNhbWJsYWplLiJ9LHsidXVpZCI6IjA2ODU1OWJhLTBmNTMtNDBjMS04MjAzLWJkMzVjNTg4YjJjNCIsInRpdGxlIjoiUGludHVyYSIsImRlc2NyaXB0aW9uIjoiU2VydmljaW9zIGRlIGFwbGljYWNpw7NuIGRlIHBpbnR1cmEgZW4gaW50ZXJpb3JlcyB5IGV4dGVyaW9yZXMuIn1dLCJ1dWlkIjoiMWQ3YzhkMGEtNmVjNS00ZDcxLTlmMTEtYzVmOWViNTZjZWM4IiwibmFtZSI6InNob25zYWRhc2QiLCJlbWFpbCI6InJhbW9zcHJvcXVlQGdtYWlsLmNvbSIsImxhc3ROYW1lIjoic2hvbnNhZGFzZCIsInBob25lTnVtYmVyIjoiOTIzNDU2Nzg5MSIsImJpcnRoZGF5IjoiMjAyMi0wMy0wMSIsInJlZ2lvbiI6ImNoaWFwYXMiLCJwbGFuIjoiRlJFRSIsInJvbGUiOiJTRVJWSUNFX1BST1ZJREVSIiwibGF0aXR1ZGUiOjAsImxvbmdpdHVkZSI6MCwiZGVzY3JpcHRpb24iOiJ3ZSBkb24ndCBrbm93IGFueXRoaW5nIHlldCBhYm91dCB0aGlzIHBlcnNvbiwgYnV0IHdlIHRoaW5rIGhlJ3MgZ3JlYXQuIiwiY29tcGFueSI6IiIsImltYWdlX3VybCI6Imh0dHBzOi8vb253b3JrLnMzLmFtYXpvbmF3cy5jb20vdXN1YXJpby9tLnBuZyJ9LCJpYXQiOjE3MjE3MTAyOTIsImV4cCI6MTcyMTcxNzQ5Mn0.CKe1zq0HKkRRU02fA5pDCW-th_T9aT7MuCfD3xx3UXM'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InRhZ3MiOlt7InV1aWQiOiIwMTlmNjkxNS1lZGJiLTRmZGItYWYzZi0wMmY1ODhiMjI0ZjIiLCJ0aXRsZSI6IkVuc2FtYmxhamUiLCJkZXNjcmlwdGlvbiI6Ik1vbnRhamUgZGUgbXVlYmxlcywgZXF1aXBvcyB5IG90cm9zIGFydMOtY3Vsb3MgcXVlIHJlcXVpZXJlbiBlbnNhbWJsYWplLiJ9LHsidXVpZCI6IjA2ODU1OWJhLTBmNTMtNDBjMS04MjAzLWJkMzVjNTg4YjJjNCIsInRpdGxlIjoiUGludHVyYSIsImRlc2NyaXB0aW9uIjoiU2VydmljaW9zIGRlIGFwbGljYWNpw7NuIGRlIHBpbnR1cmEgZW4gaW50ZXJpb3JlcyB5IGV4dGVyaW9yZXMuIn1dLCJ1dWlkIjoiMWQ3YzhkMGEtNmVjNS00ZDcxLTlmMTEtYzVmOWViNTZjZWM4IiwibmFtZSI6InNob25zYWRhc2QiLCJlbWFpbCI6InJhbW9zcHJvcXVlQGdtYWlsLmNvbSIsImxhc3ROYW1lIjoic2hvbnNhZGFzZCIsInBob25lTnVtYmVyIjoiOTIzNDU2Nzg5MSIsImJpcnRoZGF5IjoiMjAyMi0wMy0wMSIsInJlZ2lvbiI6ImNoaWFwYXMiLCJwbGFuIjoiRlJFRSIsInJvbGUiOiJTRVJWSUNFX1BST1ZJREVSIiwibGF0aXR1ZGUiOjAsImxvbmdpdHVkZSI6MCwiZGVzY3JpcHRpb24iOiJ3ZSBkb24ndCBrbm93IGFueXRoaW5nIHlldCBhYm91dCB0aGlzIHBlcnNvbiwgYnV0IHdlIHRoaW5rIGhlJ3MgZ3JlYXQuIiwiY29tcGFueSI6IiIsImltYWdlX3VybCI6Imh0dHBzOi8vb253b3JrLnMzLmFtYXpvbmF3cy5jb20vdXN1YXJpby9tLnBuZyJ9LCJpYXQiOjE3MjE3MTUwMjcsImV4cCI6MTcyMTcyMjIyN30.5URHlYcAo8UIO47GQTyR53hMNAGYjQZKL8sRN8jipa8'
     }
   };
 
@@ -90,7 +88,7 @@ export default function ProfileScreen() {
         setUsers(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   }, []);
 
@@ -141,7 +139,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    height: '60%',
+    height: '100%',
   },
   header: {
     flexDirection: 'row',

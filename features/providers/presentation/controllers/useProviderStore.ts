@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { ProviderRepositoryImpl } from "../../data/repositories/provider.repository.remote";
-import { GetProviderUseCase } from "../../domain/usecases/provider.usecase.get";
-import { Provider } from "../../data/interfaces/provider.interface";
-import { ProviderRequest } from "../../domain/models/provider.model";
+import { ProviderRepositoryImpl } from "@/features/providers/data/repositories/provider.repository.remote";
+import { GetProviderUseCase } from "@/features/providers/domain/usecases/provider.usecase.get";
+import { Provider } from "@/features/providers/data/interfaces/provider.interface";
+import { ProviderRequest } from "@/features/providers/domain/models/provider.model";
 
 const providerRepositoryImpl = new ProviderRepositoryImpl();
 
@@ -38,7 +38,7 @@ export const useProviderStore = create<ProviderState>((set, get) => ({
       setIsLoading(true);
       const response = await getProviderUseCase.execute(providerRequest);
 
-      if (response.status) {
+      if (response.statusCode) {
         return response.data as Provider[];
       } else {
         throw new Error(response.message);
