@@ -3,6 +3,7 @@ import React from 'react'
 import { AnimatedRef, SharedValue } from 'react-native-reanimated';
 import { OnBoardingData } from '@/shared/data/data';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 type Props = {
   flatListRef: AnimatedRef<FlatList<OnBoardingData>>;
@@ -12,13 +13,14 @@ type Props = {
 }
 
 const CustomButton = ({ dataLength, flatListIndex, flatListRef, x }: Props) => {
+  const router = useRouter();
   return (
     <TouchableWithoutFeedback
       onPress={() => {
         if (flatListIndex.value < dataLength - 1) {
           flatListRef.current?.scrollToIndex({ index: flatListIndex.value + 1 });
         } else {
-          console.log("Navegar a la siguiente pantalla");
+          router.navigate('/login');
         }
       }}
     >
