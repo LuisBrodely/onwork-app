@@ -81,14 +81,16 @@ const styles = StyleSheet.create({
     marginBottom: 120,
   },
   itemText: {
-    fontSize: 32,
+    fontSize: 39,
     fontWeight: 'bold',
     marginBottom: 10,
     marginHorizontal: 20,
   },
   subitemText: {
-    fontSize: 16,
+    fontSize: 20,
     marginHorizontal: 20,
+    fontWeight: '500',
+    marginTop: 15,
   },
   circleContainer: {
     ...StyleSheet.absoluteFillObject,

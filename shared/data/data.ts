@@ -22,7 +22,7 @@ const data: OnBoardingData[] = [
   {
     id: 2,
     animation: require('@/assets/images/onboarding-2.svg'),
-    text: 'La Solución de OnWork',
+    text: 'La Solución de OnWork.',
     textColor: '#EF3166',
     backgroundColor: '#f1f1f1',
     subtitle: 'OnWork es una plataforma que te permite encontrar personal de manera rápida y sencilla.',
@@ -30,7 +30,7 @@ const data: OnBoardingData[] = [
   {
     id: 3,
     animation: require('@/assets/images/onboarding-3.svg'),
-    text: '¿Por qué elegir OnWork?',
+    text: '¿Por qué elegir OnWork?.',
     textColor: '#5DC3B2',
     backgroundColor: '#201F1F',
     subtitle: 'OnWork te permite encontrar personal calificado y con experiencia en el área que necesitas en cuestión de minutos.',
