@@ -1,6 +1,5 @@
-import { ProviderResponse } from "@/features/providers/data/interfaces/provider.interface";
-import { ProviderRequest } from "@/features/providers/domain/models/provider.model";
+import { ProvidersResponse } from "@/features/providers/data/interfaces/provider.interface";
 
 export interface ProviderRepository {
-  getProviders(request: ProviderRequest): Promise<ProviderResponse>;
+  getProviders(): Promise<ProvidersResponse>;
 }

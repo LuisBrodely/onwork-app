@@ -1,26 +1,24 @@
 import { create } from "zustand";
 import { ProviderRepositoryImpl } from "@/features/providers/data/repositories/provider.repository.remote";
-import { GetProviderUseCase } from "@/features/providers/domain/usecases/provider.usecase.get";
+import { GetProvidersUseCase } from "@/features/providers/domain/usecases/provider.usecase.get";
 import { Provider } from "@/features/providers/data/interfaces/provider.interface";
-import { ProviderRequest } from "@/features/providers/domain/models/provider.model";
 
 const providerRepositoryImpl = new ProviderRepositoryImpl();
-
-const getProviderUseCase = new GetProviderUseCase(providerRepositoryImpl);
+const getProvidersUseCase = new GetProvidersUseCase(providerRepositoryImpl);
 
 interface ProviderState {
-  provider: Provider;
+  providers: Provider[];
   isLoading: boolean;
+
   error?: Error | null | unknown;
 
   setIsLoading: (isLoading: boolean) => void;
-  setMyProviders: (provider: Provider) => void;
 
-  getProvider: (providerRequest: ProviderRequest) => void;
+  getProviders: () => Promise<Provider[]>;
 }
 
 export const useProviderStore = create<ProviderState>((set, get) => ({
-  provider: {} as Provider,
+  providers: [],
   isLoading: false,
   error: null,
 
@@ -28,17 +26,14 @@ export const useProviderStore = create<ProviderState>((set, get) => ({
     set({ isLoading });
   },
 
-  setMyProviders: (provider: Provider) => {
-    set({ provider });
-  },
-
-  getProvider: async (providerRequest: ProviderRequest) => {
+  getProviders: async () => {
     const { setIsLoading } = get();
     try {
       setIsLoading(true);
-      const response = await getProviderUseCase.execute(providerRequest);
+      const response = await getProvidersUseCase.execute();
 
       if (response.statusCode) {
+        set({ providers: response.data });
         return response.data as Provider[];
       } else {
         throw new Error(response.message);
@@ -49,5 +44,5 @@ export const useProviderStore = create<ProviderState>((set, get) => ({
     } finally {
       setIsLoading(false);
     }
-  }
+  },
 }));

@@ -6,10 +6,12 @@ import { Image } from "expo-image";
 import { IconButton, Searchbar } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useState } from "react";
+import { useProviderStore } from "@/features/providers/presentation/controllers/useProviderStore";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const { signOut, user } = useSessionStore();
+  const { getProviders } = useProviderStore();
 
   return (
     <View style={styles.container}>
