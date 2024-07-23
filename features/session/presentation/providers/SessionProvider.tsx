@@ -12,7 +12,7 @@ export const SessionProvider = ({ children }: PropsWithChildren) => {
     useEffect(() => {
       if (status !== SessionStatus.CHECKING) {
         if (status === SessionStatus.UNAUTHENTICATED) {
-          router.replace("/login")
+          router.replace("/onboarding")
         }
 
         if (status === SessionStatus.AUTHENTICATED) {
