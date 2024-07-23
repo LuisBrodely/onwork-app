@@ -5,30 +5,7 @@ import * as Location from 'expo-location';
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
-
-interface User {
-  tags: string[];
-  uuid: string;
-  name: string;
-  email: string;
-  lastName: string;
-  phoneNumber: string;
-  birthday: string;
-  region: string;
-  plan: string;
-  role: string;
-  latitude: number;
-  longitude: number;
-  description: string;
-  company: string;
-}
-
-interface ApiResponse {
-  data: User[];
-  message: string;
-  success: boolean;
-  statusCode: number;
-}
+import { useProviderStore } from "@/features/providers/presentation/controllers/useProviderStore";
 
 interface Coordinates {
   accuracy: number;
@@ -44,9 +21,20 @@ interface Location {
   coords: Coordinates;
   timestamp: number;
 }
+const INITIAL_REGION = {
+  latitude: 16.614254,
+  longitude: -93.08969,
+  latitudeDelta: 1,
+  longitudeDelta: 1,
+};
+
 
 export default function ProfileScreen() {
-  const [users, setUsers] = useState<User[]>([]);
+  const { providers, getProviders } = useProviderStore();
+  useEffect(() => {
+    getProviders();
+  }, []);
+
   const [location, setLocation] = useState<Location>({
     coords: {
       accuracy: 0,
@@ -73,42 +61,31 @@ export default function ProfileScreen() {
   }, [location]);
 
 
-  let config = {
-    method: 'get',
-    maxBodyLength: Infinity,
-    url: 'https://onwork-gateway.integrador.xyz/api/v1/users/',
-    headers: {
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InRhZ3MiOlt7InV1aWQiOiIwMTlmNjkxNS1lZGJiLTRmZGItYWYzZi0wMmY1ODhiMjI0ZjIiLCJ0aXRsZSI6IkVuc2FtYmxhamUiLCJkZXNjcmlwdGlvbiI6Ik1vbnRhamUgZGUgbXVlYmxlcywgZXF1aXBvcyB5IG90cm9zIGFydMOtY3Vsb3MgcXVlIHJlcXVpZXJlbiBlbnNhbWJsYWplLiJ9LHsidXVpZCI6IjA2ODU1OWJhLTBmNTMtNDBjMS04MjAzLWJkMzVjNTg4YjJjNCIsInRpdGxlIjoiUGludHVyYSIsImRlc2NyaXB0aW9uIjoiU2VydmljaW9zIGRlIGFwbGljYWNpw7NuIGRlIHBpbnR1cmEgZW4gaW50ZXJpb3JlcyB5IGV4dGVyaW9yZXMuIn1dLCJ1dWlkIjoiMWQ3YzhkMGEtNmVjNS00ZDcxLTlmMTEtYzVmOWViNTZjZWM4IiwibmFtZSI6InNob25zYWRhc2QiLCJlbWFpbCI6InJhbW9zcHJvcXVlQGdtYWlsLmNvbSIsImxhc3ROYW1lIjoic2hvbnNhZGFzZCIsInBob25lTnVtYmVyIjoiOTIzNDU2Nzg5MSIsImJpcnRoZGF5IjoiMjAyMi0wMy0wMSIsInJlZ2lvbiI6ImNoaWFwYXMiLCJwbGFuIjoiRlJFRSIsInJvbGUiOiJTRVJWSUNFX1BST1ZJREVSIiwibGF0aXR1ZGUiOjAsImxvbmdpdHVkZSI6MCwiZGVzY3JpcHRpb24iOiJ3ZSBkb24ndCBrbm93IGFueXRoaW5nIHlldCBhYm91dCB0aGlzIHBlcnNvbiwgYnV0IHdlIHRoaW5rIGhlJ3MgZ3JlYXQuIiwiY29tcGFueSI6IiIsImltYWdlX3VybCI6Imh0dHBzOi8vb253b3JrLnMzLmFtYXpvbmF3cy5jb20vdXN1YXJpby9tLnBuZyJ9LCJpYXQiOjE3MjE3MTUwMjcsImV4cCI6MTcyMTcyMjIyN30.5URHlYcAo8UIO47GQTyR53hMNAGYjQZKL8sRN8jipa8'
-    }
-  };
-
-  useEffect(() => {
-    axios.request<ApiResponse>(config)
-      .then((response) => {
-        setUsers(response.data.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
   return (
     <View style={styles.containerGlobal}>
       <MapView
         style={styles.map}
+        initialRegion={INITIAL_REGION}
       >
-        {users && users.map((user, index) => (
+        {providers && providers.map((user) => (
           <Marker
-            key={index}
+            key={user.uuid}
             coordinate={{
               latitude: user.latitude,
               longitude: user.longitude,
             }}
-            title={user.name}
-            description={user.description}
+            title={"Persona a cargo:  " + user.name}
           >
             <View style={styles.marker}>
-              <Ionicons name="person" size={14} color="#fff" />
+              <Text
+                style={{
+                  color: '#000',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                }}>
+                {user.tags[0].title}
+              </Text>
             </View>
           </Marker>
         ))}
@@ -236,18 +213,20 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   marker: {
-    padding: 5,
+    padding: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#EF3166',
-    elevation: 1,
-    borderRadius: 32,
+    backgroundColor: '#fff',
+    elevation: 5,
+    borderRadius: 12,
+    borderColor: '#000',
+    borderWidth: 0.4,
     shadowColor: '#000',
-    shadowOpacity: 2,
-    shadowRadius: 5,
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
     shadowOffset: {
       width: 1,
-      height: 12,
+      height: 10,
     },
   },
   Mymarker: {

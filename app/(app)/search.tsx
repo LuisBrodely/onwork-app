@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#DEDEDE",
     backgroundColor: "#FFF",
+    marginTop: 26,
   },
   button: {
     borderWidth: 1,

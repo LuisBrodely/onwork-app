@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 export const PriceList = () => {
   const [price, setPrice] = useState([10, 9999]);
+
 
   const handleValuesChange = (values: any) => {
     setPrice(values);
@@ -19,8 +20,8 @@ export const PriceList = () => {
         <View style={styles.sliderContainer}>
           <MultiSlider
             values={[price[0], price[1]]}
-            min={10}
-            max={9999}
+            min={500}
+            max={9000}
             step={1}
             onValuesChange={handleValuesChange}
             selectedStyle={styles.selectedTrack}
@@ -31,14 +32,6 @@ export const PriceList = () => {
           />
         </View>
         <View style={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
-          <Pressable
-            style={{ backgroundColor: '#EF3166', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8, alignItems: 'center', marginTop: 32 }}
-            onPress={() => console.log('View Results pressed range: ' + price)}
-          >
-            <Text style={{ color: '#fff' }}>
-              View Results
-            </Text>
-          </Pressable>
         </View>
       </View>
     </View>

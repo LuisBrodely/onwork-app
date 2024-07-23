@@ -1,79 +1,73 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native'
-import React from 'react'
-import { useProviderStore } from '@/features/providers/presentation/controllers/useProviderStore';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import React, { useEffect } from 'react'
+import { useTagStore } from '@/features/tags/presentation/controllers/useTagsStore';
 
-const categories = [
-  { key: "1", name: 'Cerrajero', icon: '🔑' },
-  { key: "2", name: 'Albañil', icon: '🧱' },
-  { key: "3", name: 'Mecánico', icon: '🚗' },
-  { key: "4", name: 'Pelquero', icon: '💇‍♂️' },
-  { key: "5", name: 'Conductor', icon: '🚚' },
-  { key: "6", name: 'Niñera', icon: '👶' },
-];
+const iconDictionary: { [key: string]: string } = {
+  'Carga Pesada': '📦',
+  'Administración': '📊',
+  'Reparaciones': '🔧',
+  'Pintura y Decoración': '🎨',
+  'Pintura': '🎨',
+  'Cuidado de Mascotas': '🐾',
+  'Asistencia en Eventos': '🎉',
+  'Organización del Hogar': '🏠',
+  'Fotografía': '📸',
+  'Transporte': '🚗',
+  'Electricidad': '⚡',
+  'Limpieza': '🧼',
+  'Mudanzas': '🚚',
+  'Carpintería': '🪑',
+  'Ensamblaje': '🧱',
+  'Trabajo de Jardinería': '🌳',
+  'Fontanería': '🚿',
+  'Informática': '💻',
+};
 
-const secondCategories = [
-  { key: "1", name: 'Fontanero', icon: '🚿' },
-  { key: "2", name: 'Electricista', icon: '⚡' },
-  { key: "3", name: 'Carpintero', icon: '🔨' },
-  { key: "4", name: 'Pintor', icon: '🎨' },
-  { key: "5", name: 'Jardinero', icon: '🌳' },
-  { key: "6", name: 'Limpieza', icon: '🧼' },
-]
-
-const thirdCategories = [
-  { key: "1", name: 'Cocinero', icon: '🍳' },
-  { key: "2", name: 'Veterinario', icon: '🐾' },
-  { key: "3", name: 'Músico', icon: '🎵' },
-  { key: "4", name: 'Fotógrafo', icon: '📸' },
-  { key: "5", name: 'Sastre', icon: '🧵' },
-  { key: "6", name: 'Reparador de Electrodomésticos', icon: '🔌' },
-]
-
-const CategoryItem = ({ name, icon }: any) => (
-  <View style={styles.categoryContainer}>
+const CategoryItem = ({ name, icon }: { name: string, icon: string }) => (
+  <TouchableOpacity style={styles.categoryContainer}>
     <Text style={styles.icon}>{icon}</Text>
     <Text style={styles.categoryText}>{name}</Text>
-  </View>
+  </TouchableOpacity>
 );
 
+const splitArrayIntoChunks = (array: any[], chunkSize: number) => {
+  const chunks = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(array.slice(i, i + chunkSize));
+  }
+  return chunks;
+};
+
 export const CategoryList = () => {
+  const { getTags, tags } = useTagStore();
 
-  const { providers, getProviders } = useProviderStore();
+  useEffect(() => {
+    getTags();
+  }, [getTags]);
 
+  const groupedTags = splitArrayIntoChunks(tags, 6);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Categorías</Text>
       <FlatList
-        data={categories}
-        horizontal
-        renderItem={({ item }) => <CategoryItem name={item.name} icon={item.icon} />}
-        keyExtractor={item => item.key}
-        contentContainerStyle={styles.listContainer}
-        showsHorizontalScrollIndicator={false}
-      />
-      <FlatList
-        style={{ marginTop: 20 }}
-        data={secondCategories}
-        horizontal
-        renderItem={({ item }) => <CategoryItem name={item.name} icon={item.icon} />}
-        keyExtractor={item => item.key}
-        contentContainerStyle={styles.listContainer}
-        showsHorizontalScrollIndicator={false}
-      />
-      <FlatList
-        style={{ marginTop: 20 }}
-        data={thirdCategories}
-        horizontal
-        renderItem={({ item }) => <CategoryItem name={item.name} icon={item.icon} />}
-        keyExtractor={item => item.key}
-        contentContainerStyle={styles.listContainer}
-        showsHorizontalScrollIndicator={false}
+        data={groupedTags}
+        renderItem={({ item }) => (
+          <FlatList
+            data={item}
+            horizontal
+            renderItem={({ item }) => <CategoryItem name={item.title} icon={iconDictionary[item.title]} />}
+            keyExtractor={item => item.uuid}
+            contentContainerStyle={styles.listContainer}
+            showsHorizontalScrollIndicator={false}
+          />
+        )}
+        keyExtractor={(_, index) => index.toString()}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -82,7 +76,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 16,
     padding: 24,
   },
   listContainer: {
@@ -95,6 +88,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 10,
   },
   icon: {
     fontSize: 24,
