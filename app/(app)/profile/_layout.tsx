@@ -24,10 +24,10 @@ const Layout = () => {
           backgroundColor: "#fff",
           paddingTop: Constants.statusBarHeight + 10,
         },
-        tabBarActiveTintColor: "#FF3040",
+        tabBarActiveTintColor: "#EF3166",
         tabBarLabelStyle: { fontSize: 14, fontWeight: "500", textTransform: "capitalize" },
         tabBarInactiveTintColor: "#4D4D4D",
-        tabBarIndicatorStyle: { backgroundColor: "#FF3040", height: 3 },
+        tabBarIndicatorStyle: { backgroundColor: "#EF3166", height: 3 },
       }}
     >
       <MaterialTopTabs.Screen name="home" options={{ title: "Perfil" }} />

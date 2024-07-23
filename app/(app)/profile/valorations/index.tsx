@@ -25,45 +25,53 @@ const ValorationsScreen = () => {
               marginBottom: 20,
             }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 10,
-              }}
-            >
-              <Image
-                source={{ uri: item.uuid }}
+            <View>
+              <View
                 style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 50,
-                  backgroundColor: "red",
-                }}
-              />
-              <View>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "600",
-                  }}
-                >
-                  Brodely Tovar
-                </Text>
-                <View style={{
-                  marginTop: 4,
-                  backgroundColor: "#EF3166",
-                  justifyContent: "center",
+                  flexDirection: "row",
                   alignItems: "center",
-                  borderRadius: 20,
-                  padding: 3,
-                  width: 80,
-                }}>
-                  <Text style={{
-                    color: "#FFF",
-                    fontSize: 10,
-                    fontWeight: "bold",
-                  }}>{item.general_review}</Text>
+                  gap: 10,
+                }}
+              >
+                <Image
+                  source={{ uri: item.uuid }}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 50,
+                    backgroundColor: "red",
+                  }}
+                />
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "600",
+                    }}
+                  >
+                    Brodely Tovar
+                  </Text>
+                  <View
+                    style={{
+                      marginTop: 4,
+                      backgroundColor: "#EF3166",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 20,
+                      padding: 3,
+                      width: 80,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#FFF",
+                        fontSize: 10,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item.general_review}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>

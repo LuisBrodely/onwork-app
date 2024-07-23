@@ -20,6 +20,7 @@ import {
 } from "@/shared/utils/util";
 import { usePublicationStore } from "@/features/publications/presentation/controllers/usePublicationStore";
 import { useValorationStore } from "@/features/valorations/presentation/controllers/useValorationStore";
+import { useServiceStore } from "@/features/services/presentation/controllers/useValorationStore";
 
 const ProfileScreen = () => {
   const { user } = useSessionStore();
@@ -27,6 +28,9 @@ const ProfileScreen = () => {
     useValorationStore();
   const { getPublicationsByUser, myPublications, setMyPublications } =
     usePublicationStore();
+  const { getServicesByProvider, setMyServices } =
+    useServiceStore();
+
   const router = useRouter();
 
   const fetchValorations = async () => {
@@ -49,6 +53,17 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     fetchPublications();
+  }, [user]);
+
+  const fetchServices = async () => {
+    if (user) {
+      const response = await getServicesByProvider({ uuid: user.uuid });
+      setMyServices(response);
+    }
+  }
+
+  useEffect(() => {
+    fetchServices();
   }, [user]);
 
   return (
