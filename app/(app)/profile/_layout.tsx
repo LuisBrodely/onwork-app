@@ -25,20 +25,25 @@ const Layout = () => {
           paddingTop: Constants.statusBarHeight + 10,
         },
         tabBarActiveTintColor: "#EF3166",
-        tabBarLabelStyle: { fontSize: 14, fontWeight: "500", textTransform: "capitalize" },
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontWeight: "500",
+          textTransform: "capitalize",
+        },
         tabBarInactiveTintColor: "#4D4D4D",
         tabBarIndicatorStyle: { backgroundColor: "#EF3166", height: 3 },
       }}
     >
       <MaterialTopTabs.Screen name="home" options={{ title: "Perfil" }} />
       <MaterialTopTabs.Screen
-        name="valorations"
-        options={{ title: "Opiniones" }}
-      />
-      <MaterialTopTabs.Screen
         name="services"
         options={{ title: "Servicios" }}
       />
+      <MaterialTopTabs.Screen
+        name="valorations"
+        options={{ title: "Opiniones" }}
+      />
+      <MaterialTopTabs.Screen name="payment" options={{ title: "Pagos" }} />
     </MaterialTopTabs>
   );
 };

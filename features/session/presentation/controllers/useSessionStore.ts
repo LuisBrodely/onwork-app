@@ -29,6 +29,7 @@ export interface SessionState {
   signOut: () => Promise<void>;
   signUp: (signUpModel: SignUpModel) => Promise<boolean>;
   status: SessionStatus;
+  setUser: (user: User) => void;
   user: User | null;
 }
 
@@ -43,6 +44,10 @@ const validateTokenUseCase = new ValidateTokenUseCase(sessionRepositoryImpl);
 export const useSessionStore = create<SessionState>()((set, get) => ({
   status: SessionStatus.CHECKING,
   user: null,
+
+  setUser: (user: User) => {
+    set({ user });
+  },
 
   signIn: async (signInModel: SignInModel) => {
     try {

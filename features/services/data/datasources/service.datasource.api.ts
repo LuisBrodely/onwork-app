@@ -17,7 +17,7 @@ export const createService = async (request: CreateServiceModel) => {
       request
     );
 
-    if (response.status === 201) {
+    if (response.status === 200) {
       return response.data;
     } else {
       throw new Error(response.data.message);

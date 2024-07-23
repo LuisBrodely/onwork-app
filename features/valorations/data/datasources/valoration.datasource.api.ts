@@ -8,6 +8,7 @@ import {
   CreateValorationModel,
   ValorationUuidModel,
   GetValorationsByProviderModel,
+  GetValorationsByUserModel,
 } from "../../domain/models/valoration.model";
 
 export const createValoration = async (request: CreateValorationModel) => {
@@ -51,6 +52,25 @@ export const getValorationsByProvider = async (
   try {
     const response = await OnWorkApi.get<ValorationsResponse>(
       `valorations/provider/${request.uuid}`
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message);
+    }
+  } catch (err) {
+    const error = err as AxiosError;
+    throw new Error(error.message);
+  }
+};
+
+export const getValorationsByUser = async (
+  request: GetValorationsByUserModel
+) => {
+  try {
+    const response = await OnWorkApi.get<ValorationsResponse>(
+      `valorations/user/${request.uuid}`
     );
 
     if (response.status === 200) {

@@ -1,17 +1,49 @@
-import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { FAB, Divider, Button } from "react-native-paper";
 import { useServiceStore } from "@/features/services/presentation/controllers/useValorationStore";
-import { Octicons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
 
 const ValorationsScreen = () => {
-  const { myServices } = useServiceStore();
+  const { user } = useSessionStore();
+  const { myServices, deleteService, getServicesByProvider, setMyServices, isLoading } =
+    useServiceStore();
   const router = useRouter();
+
+  const handleDelete = async (uuid: string) => {
+    const response = await deleteService({ uuid });
+
+    if (response) {
+      const services = await getServicesByProvider({ uuid: user?.uuid || "" });
+      setMyServices(services);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: '#fff' }}>
+        <ActivityIndicator animating={true} color="#FF4081" size="large" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <FlatList
+      
+      {myServices.length === 0 && (
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "600",
+            marginTop: 24,
+          }}
+        >
+          No tienes servicios...
+        </Text>
+      )}
+
+      {myServices &&
+        <FlatList
         horizontal={false}
         data={myServices}
         keyExtractor={(item) => item.uuid}
@@ -29,16 +61,16 @@ const ValorationsScreen = () => {
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
-                alignItems: 'center'
+                alignItems: "center",
               }}
             >
               <View>
                 <Text
                   style={{
                     fontSize: 14,
-                    color: '#666',
+                    color: "#666",
                     fontWeight: "600",
-                    marginBottom: 4
+                    marginBottom: 4,
                   }}
                 >
                   {item.name}
@@ -67,20 +99,36 @@ const ValorationsScreen = () => {
                   </Text>
                 </View>
               </View>
-              <Button
+
+              {/* <Button
                 mode="contained"
                 buttonColor="#EF3166"
                 style={{
-                  marginTop: 8
+                  marginTop: 8,
                 }}
                 onPress={() => {
                   router.push(`/profile/services/${item.uuid}`);
                 }}
               >
-                <Text style={{
-                  color: '#fff',
-                  fontWeight: '600'
-                }}>Pagar</Text>
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontWeight: "600",
+                  }}
+                >
+                  Pagar
+                </Text>
+              </Button> */}
+
+              <Button
+                mode="contained"
+                buttonColor="#EF3166"
+                style={{
+                  marginTop: 8,
+                }}
+                onPress={() => handleDelete(item.uuid)}
+              >
+                Eliminar
               </Button>
             </View>
             <Divider
@@ -90,7 +138,7 @@ const ValorationsScreen = () => {
             />
           </View>
         )}
-      />
+      />}
 
       <FAB
         icon="plus"
@@ -116,7 +164,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: "#FF5C69",
+    backgroundColor: "#EF3166",
   },
 });
 export default ValorationsScreen;

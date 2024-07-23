@@ -9,6 +9,11 @@ export interface GetValorationsByProviderModel {
   uuid: string;
 }
 
+export interface GetValorationsByUserModel {
+  uuid: string;
+
+}
+
 export interface ValorationUuidModel {
   uuid: string;
 }

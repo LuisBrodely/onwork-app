@@ -6,7 +6,8 @@ import { DeleteValorationUseCase } from "../../domain/usecases/valoration.usecas
 import { 
   CreateValorationModel, 
   ValorationUuidModel, 
-  GetValorationsByProviderModel 
+  GetValorationsByProviderModel, 
+  GetValorationsByUserModel
 } from "../../domain/models/valoration.model";
 import { Valoration } from "../../data/interfaces/valoration.interface";
 
@@ -26,6 +27,7 @@ interface ValorationState {
 
   createValoration: (valoration: CreateValorationModel) => Promise<boolean>;
   getValorationsByProvider: (providerModel: GetValorationsByProviderModel) => Promise<Valoration[]>;
+  getValorationsByUser: (userModel: GetValorationsByUserModel) => Promise<Valoration[]>;
   deleteValoration: (uuidModel: ValorationUuidModel) => Promise<boolean>;
 }
 
@@ -65,6 +67,25 @@ export const useValorationStore = create<ValorationState>((set, get) => ({
     try {
       setIsLoading(true);
       const response = await getValorationsByProviderUseCase.execute(providerModel);
+
+      if (response.status) {
+        return response.data as Valoration[];
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      set({ error });
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  },
+
+  getValorationsByUser: async (userModel: GetValorationsByUserModel) => {
+    const { setIsLoading } = get();
+    try {
+      setIsLoading(true);
+      const response = await getValorationsByProviderUseCase.execute(userModel);
 
       if (response.status) {
         return response.data as Valoration[];

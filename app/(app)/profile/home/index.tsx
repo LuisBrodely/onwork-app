@@ -94,14 +94,24 @@ const ProfileScreen = () => {
                 <Text style={styles.profileName}>{user?.name}</Text>
                 <Text style={styles.profileTitle}>{user?.lastName}</Text>
               </View>
-              <Pressable
+
+              {/* <Pressable
                 style={styles.profileBadge}
                 onPress={() => {
-                  router.push(`/provider/home/chat/${user?.uuid}`);
+                  router.push(`/profile/home/chat/${user?.uuid}`);
                 }}
               >
                 <Text style={styles.profileStars}>Contactar</Text>
-              </Pressable>
+              </Pressable> */}
+
+              <TouchableOpacity
+                style={styles.profileBadge}
+                onPress={() => {
+                  router.push(`/profile/home/update-role`);
+                }}
+              >
+                <Text style={styles.profileStars}>Editar</Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.stats}>
@@ -261,19 +271,21 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   profileBadge: {
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#ffff",
     borderRadius: 20,
     paddingHorizontal: 6,
     width: 100,
     flexDirection: "row",
+    borderColor: '#C9C9C9',
+    borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 8,
   },
   profileStars: {
-    color: "#fff",
+    color: "#1a1a1a",
     padding: 6,
-    fontWeight: "bold",
+    fontWeight: "600",
     fontSize: 14,
   },
   stats: {

@@ -13,10 +13,17 @@ import { useSessionStore } from "@/features/session/presentation/controllers/use
 import { usePublicationStore } from "@/features/publications/presentation/controllers/usePublicationStore";
 import { Octicons } from "@expo/vector-icons";
 import { Button, IconButton } from "react-native-paper";
+import { Role } from "@/features/users/domain/models/user.model";
+import { RoleInvalid } from "@/shared/components/role/RoleInvalid";
 
 export default function AddPostScreen() {
   const { user } = useSessionStore();
-  const { createPublication, myPublications, setMyPublications, getPublicationsByUser } = usePublicationStore();
+  const {
+    createPublication,
+    myPublications,
+    setMyPublications,
+    getPublicationsByUser,
+  } = usePublicationStore();
   const [image, setImage] = useState<string | null>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -84,6 +91,14 @@ export default function AddPostScreen() {
     }
   };
 
+  if (user?.role === Role.CLIENT) {
+    return (
+      <View style={styles.container}>
+        <RoleInvalid />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Nueva Publicación</Text>
@@ -100,7 +115,7 @@ export default function AddPostScreen() {
       />
       {!image && (
         <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
-          <Octicons name="upload" size={24} color="#5EC3B2" />
+          <Octicons name="upload" size={24} color="#EF3166" />
           <Text style={styles.imagePickerButtonText}>
             Selecciona una imagen de la galería
           </Text>
@@ -124,7 +139,7 @@ export default function AddPostScreen() {
           />
         </View>
       )}
-      <Button mode="contained" buttonColor="#5EC3B2" onPress={handleSubmit}>
+      <Button mode="contained" buttonColor="#EF3166" onPress={handleSubmit}>
         <Text
           style={{
             color: "#fff",
