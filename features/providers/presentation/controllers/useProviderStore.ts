@@ -10,17 +10,24 @@ interface ProviderState {
   providers: Provider[];
   isLoading: boolean;
 
+  selectedUuidProvider: string | null;
+  setSelectedUuidProvider: (uuid: string) => void;
+
   error?: Error | null | unknown;
 
   setIsLoading: (isLoading: boolean) => void;
-
   getProviders: () => Promise<Provider[]>;
 }
 
 export const useProviderStore = create<ProviderState>((set, get) => ({
   providers: [],
+  selectedUuidProvider: null,
   isLoading: false,
   error: null,
+
+  setSelectedUuidProvider: (uuid: string) => {
+    set({ selectedUuidProvider: uuid });
+  },
 
   setIsLoading: (isLoading: boolean) => {
     set({ isLoading });

@@ -1,15 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
   ScrollView,
   StyleSheet,
   FlatList,
-  Pressable,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { Image } from "expo-image";
-import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
 import { Octicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import {
@@ -19,52 +18,66 @@ import {
 } from "@/shared/utils/util";
 import { usePublicationStore } from "@/features/publications/presentation/controllers/usePublicationStore";
 import { useValorationStore } from "@/features/valorations/presentation/controllers/useValorationStore";
-import { useServiceStore } from "@/features/services/presentation/controllers/useValorationStore";
+import { useProviderStore } from "@/features/providers/presentation/controllers/useProviderStore";
+import { Valoration } from "@/features/valorations/data/interfaces/valoration.interface";
+import { Publication } from "@/features/publications/data/interfaces/publication.interface";
+import { Provider } from "@/features/providers/data/interfaces/provider.interface";
 
 const ProfileScreen = () => {
-  const { user } = useSessionStore();
-  const { getValorationsByProvider, myValorations, setMyValorations } =
-    useValorationStore();
-  const { getPublicationsByUser, myPublications, setMyPublications } =
-    usePublicationStore();
-  const { getServicesByProvider, setMyServices } = useServiceStore();
+  const [valorations, setValorations] = useState<Valoration[]>([]);
+  const [publications, setPublications] = useState<Publication[]>([]);
+
+  const [provider, setProvider] = useState<Provider | null>(null);
+  const { selectedUuidProvider, providers } = useProviderStore();
+
+  const { getPublicationsByUser } = usePublicationStore();
+  const { getValorationsByProvider } = useValorationStore();
 
   const router = useRouter();
 
   const fetchValorations = async () => {
-    if (user) {
-      const response = await getValorationsByProvider({ uuid: user.uuid });
-      console.log('userid', user.uuid);
-      console.log('VALORATIONS', response);
-      setMyValorations(response);
+    if (selectedUuidProvider) {
+      const response = await getValorationsByProvider({
+        uuid: selectedUuidProvider,
+      });
+      console.log("VALORATIONS", response);
+      setValorations(response);
     }
   };
 
   useEffect(() => {
     fetchValorations();
-  }, [user]);
+  }, [selectedUuidProvider]);
 
   const fetchPublications = async () => {
-    if (user) {
-      const response = await getPublicationsByUser({ uuid: user.uuid });
-      setMyPublications(response);
+    try {
+      if (selectedUuidProvider) {
+        const response = await getPublicationsByUser({
+          uuid: selectedUuidProvider,
+        });
+        if (response) {
+          setPublications(response);
+        }
+      }
+    } catch (error) {
+      console.log("ERROR", error);
     }
   };
 
   useEffect(() => {
     fetchPublications();
-  }, [user]);
-
-  const fetchServices = async () => {
-    if (user) {
-      const response = await getServicesByProvider({ uuid: user.uuid });
-      setMyServices(response);
-    }
-  };
+  }, [selectedUuidProvider]);
 
   useEffect(() => {
-    fetchServices();
-  }, [user]);
+    if (selectedUuidProvider) {
+      const provider = providers.find(
+        (provider) => provider.uuid === selectedUuidProvider
+      );
+      if (provider) {
+        setProvider(provider);
+      }
+    }
+  }, [selectedUuidProvider]);
 
   return (
     <View style={styles.container}>
@@ -82,7 +95,7 @@ const ProfileScreen = () => {
             <Image
               style={styles.profileImage}
               source={{
-                uri: user?.image_url,
+                uri: provider?.image_url,
               }}
             />
             <View>
@@ -91,32 +104,24 @@ const ProfileScreen = () => {
                   marginLeft: 4,
                 }}
               >
-                <Text style={styles.profileName}>{user?.name}</Text>
-                <Text style={styles.profileTitle}>{user?.lastName}</Text>
+                <Text style={styles.profileName}>{provider?.name}</Text>
+                <Text style={styles.profileTitle}>{provider?.lastName}</Text>
               </View>
 
-              {/* <Pressable
+              <Pressable
                 style={styles.profileBadge}
                 onPress={() => {
-                  router.push(`/profile/home/chat/${user?.uuid}`);
+                  router.push(`/provider/home/chat/${provider?.uuid}`);
                 }}
               >
                 <Text style={styles.profileStars}>Contactar</Text>
-              </Pressable> */}
+              </Pressable>
 
-              <TouchableOpacity
-                style={styles.profileBadge}
-                onPress={() => {
-                  router.push(`/profile/home/edit`);
-                }}
-              >
-                <Text style={styles.profileStars}>Editar</Text>
-              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.stats}>
             <View style={styles.stat}>
-              <Text style={styles.statNumber}>{myPublications.length}</Text>
+              <Text style={styles.statNumber}>{publications.length}</Text>
               <Text style={styles.statLabel}>Publicaciones</Text>
             </View>
 
@@ -130,20 +135,20 @@ const ProfileScreen = () => {
               >
                 <Octicons name="star-fill" size={18} color="#FF4081" />
                 <Text style={styles.statNumber}>
-                  {calculateAverageRating(myValorations)}
+                  {calculateAverageRating(valorations)}
                 </Text>
               </View>
               <Text style={styles.statLabel}>Calificación</Text>
             </View>
             <View style={styles.stat}>
-              <Text style={styles.statNumber}>{myValorations.length}</Text>
+              <Text style={styles.statNumber}>{valorations.length}</Text>
               <Text style={styles.statLabel}>Opiniones</Text>
             </View>
           </View>
         </View>
         <View style={styles.skillsSection}>
           <Text style={styles.skillsTitle}>Información</Text>
-          <Text style={styles.userDescription}>{user?.description}</Text>
+          <Text style={styles.userDescription}>{provider?.description}</Text>
 
           <View
             style={{
@@ -160,7 +165,7 @@ const ProfileScreen = () => {
                 color: "gray",
               }}
             >
-              {capitalize(user?.region ?? "")}
+              {capitalize(provider?.region ?? "")}
             </Text>
           </View>
 
@@ -179,15 +184,15 @@ const ProfileScreen = () => {
                 color: "gray",
               }}
             >
-              {"+52 " + formatPhoneNumber(user?.phoneNumber ?? "")}
+              {"+52 " + formatPhoneNumber(provider?.phoneNumber ?? "")}
             </Text>
           </View>
         </View>
-        {user?.tags && user.tags.length > 0 && (
+        {provider?.tags && provider.tags.length > 0 && (
           <View style={styles.skillsSection}>
             <Text style={styles.skillsTitle}>Categorias</Text>
             <View style={styles.skillsContainer}>
-              {user?.tags.map((tag, index) => (
+              {provider?.tags.map((tag, index) => (
                 <View key={index} style={styles.skillBadge}>
                   <Text style={styles.skillText}>{tag.title}</Text>
                 </View>
@@ -199,7 +204,7 @@ const ProfileScreen = () => {
           <View style={{ ...styles.skillsContainer }}>
             <FlatList
               horizontal={true}
-              data={myPublications}
+              data={publications}
               keyExtractor={(item) => item.uuid}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item, index }) => (
@@ -276,7 +281,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     width: 100,
     flexDirection: "row",
-    borderColor: '#C9C9C9',
+    borderColor: "#C9C9C9",
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",

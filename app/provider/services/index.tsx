@@ -11,26 +11,32 @@ import { useServiceStore } from "@/features/services/presentation/controllers/us
 import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
 import { Role } from "@/features/users/domain/models/user.model";
 import { RoleInvalid } from "@/shared/components/role/RoleInvalid";
+import { useProviderStore } from "@/features/providers/presentation/controllers/useProviderStore";
+import { Service } from "@/features/services/data/interfaces/service.interface";
+import { useEffect, useState } from "react";
 
 const ValorationsScreen = () => {
-  const { user } = useSessionStore();
+  const [services, setServices] = useState<Service[]>([]);
+  const { selectedUuidProvider } = useProviderStore();
   const {
-    myServices,
-    deleteService,
     getServicesByProvider,
-    setMyServices,
     isLoading,
   } = useServiceStore();
   const router = useRouter();
 
-  const handleDelete = async (uuid: string) => {
-    const response = await deleteService({ uuid });
-
-    if (response) {
-      const services = await getServicesByProvider({ uuid: user?.uuid || "" });
-      setMyServices(services);
+  const fetchServices = async () => {
+    if (selectedUuidProvider) {
+      const response = await getServicesByProvider({
+        uuid: selectedUuidProvider,
+      });
+      setServices(response);
     }
   };
+
+  useEffect(() => {
+    fetchServices();
+  }
+  , [selectedUuidProvider]);
 
   if (isLoading) {
     return (
@@ -49,15 +55,7 @@ const ValorationsScreen = () => {
 
   return (
     <View style={styles.container}>
-      {user?.role === Role.CLIENT && (
-        <View style={{
-          marginTop: 36,
-        }}>
-          <RoleInvalid />
-        </View>
-      )}
-
-      {myServices.length === 0 && user?.role === Role.SERVICE_PROVIDER && (
+      {services.length === 0 && (
         <Text
           style={{
             fontSize: 16,
@@ -69,10 +67,10 @@ const ValorationsScreen = () => {
         </Text>
       )}
 
-      {myServices && user?.role === Role.SERVICE_PROVIDER && (
+      {services &&  (
         <FlatList
           horizontal={false}
-          data={myServices}
+          data={services}
           keyExtractor={(item) => item.uuid}
           showsHorizontalScrollIndicator={false}
           style={{
@@ -127,14 +125,14 @@ const ValorationsScreen = () => {
                   </View>
                 </View>
 
-                {/* <Button
+                <Button
                 mode="contained"
                 buttonColor="#EF3166"
                 style={{
                   marginTop: 8,
                 }}
                 onPress={() => {
-                  router.push(`/profile/services/${item.uuid}`);
+                  router.push(`/provider/services/${item.uuid}`);
                 }}
               >
                 <Text
@@ -145,18 +143,8 @@ const ValorationsScreen = () => {
                 >
                   Pagar
                 </Text>
-              </Button> */}
+              </Button>
 
-                <Button
-                  mode="contained"
-                  buttonColor="#EF3166"
-                  style={{
-                    marginTop: 8,
-                  }}
-                  onPress={() => handleDelete(item.uuid)}
-                >
-                  Eliminar
-                </Button>
               </View>
               <Divider
                 style={{
@@ -165,17 +153,6 @@ const ValorationsScreen = () => {
               />
             </View>
           )}
-        />
-      )}
-      {user?.role === Role.SERVICE_PROVIDER && (
-        <FAB
-          icon="plus"
-          style={styles.fab}
-          mode="flat"
-          color="#FFF"
-          onPress={() => {
-            router.push("profile/services/create");
-          }}
         />
       )}
     </View>

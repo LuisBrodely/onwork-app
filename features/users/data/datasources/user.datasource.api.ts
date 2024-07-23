@@ -68,11 +68,15 @@ export const updateUserPassword = async (request: UserUpdatePasswordModel) => {
 }
 
 export const updateUserRole = async (request: UserUpdateRoleModel) => {
+  console.log('CAMBIO EN EL CODIGO', request);
+
   try {
     const response = await OnWorkApi.put<UserResponse>(
       `/users/role/${request.uuid}`,
       request
     );
+
+    console.log('CAMBIO EN EL CODIGO', response.data.data);
     if (response.status === 201) {
       return response.data;
     } else {
