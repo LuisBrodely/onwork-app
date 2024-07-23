@@ -67,11 +67,6 @@ export default function Search() {
     setSelectedCategories(selectedCategories);
   };
 
-  const clearFilters = () => {
-    setSelectedCategories([]);
-    setSearchQuery("");
-  };
-
   const categoriesToShow = selectedCategories.length > 0 ? selectedCategories : Object.keys(groupedProviders);
 
   return (
@@ -127,18 +122,6 @@ export default function Search() {
               onPress={() => distancesHandler()}
             >
               <Text style={styles.buttonText}>Distancia</Text>
-            </Button>
-            <Button
-              icon="close"
-              mode="outlined"
-              style={styles.button}
-              buttonColor="#FFF"
-              textColor="#9C9C9C"
-              onPress={clearFilters}
-            >
-              <Text style={styles.buttonText}>
-                Eliminar filtros
-              </Text>
             </Button>
           </ScrollView>
         </View>
