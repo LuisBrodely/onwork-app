@@ -34,7 +34,7 @@ const ValorationsScreen = () => {
                 }}
               >
                 <Image
-                  source={{ uri: item.uuid }}
+                  source={{ uri: 'https://scontent.ftgz2-1.fna.fbcdn.net/v/t39.30808-6/352336737_3576726865896497_1627286230545824668_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeEWI_RFKKzgZ5la2qfbKmLNGT8QTm_0jA4ZPxBOb_SMDv3aa3xvAuRgV_CdLPlkB38jQKWR3L-c2IVGlha_caVT&_nc_ohc=a7YB9B4-idsQ7kNvgHxuYNg&_nc_ht=scontent.ftgz2-1.fna&oh=00_AYA_QUifObtguqpfewT6Ve7OiJ9ZnKUyFnbwdkICB1e8Mw&oe=66A4D70E' }}
                   style={{
                     width: 44,
                     height: 44,
@@ -82,6 +82,7 @@ const ValorationsScreen = () => {
                 color: "#666",
                 marginTop: 10,
                 fontStyle: "italic",
+                marginRight: 14,
               }}
             >
               {`"${item.comment}"`}

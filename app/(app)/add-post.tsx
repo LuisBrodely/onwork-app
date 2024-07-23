@@ -1,24 +1,32 @@
-import React, { useState } from 'react';
-import { Image, View, StyleSheet, Text, Pressable, TouchableOpacity, Alert } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import { AppTextInput } from '@/shared/components/custom/AppTextInput';
-import Constants from 'expo-constants';
-import { useSessionStore } from '@/features/session/presentation/controllers/useSessionStore';
-import { usePublicationStore } from '@/features/publications/presentation/controllers/usePublicationStore';
+import React, { useState } from "react";
+import {
+  Image,
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { AppTextInput } from "@/shared/components/custom/AppTextInput";
+import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
+import { usePublicationStore } from "@/features/publications/presentation/controllers/usePublicationStore";
+import { Octicons } from "@expo/vector-icons";
+import { Button, IconButton } from "react-native-paper";
 
 export default function AddPostScreen() {
   const { user } = useSessionStore();
-  const { createPublication } = usePublicationStore();
+  const { createPublication, myPublications, setMyPublications, getPublicationsByUser } = usePublicationStore();
   const [image, setImage] = useState<string | null>(null);
-  const [title, setTitle] = useState<string>('Caja 2');
-  const [description, setDescription] = useState<string>('Caja 3');
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.5,
     });
 
     if (!result.canceled) {
@@ -32,55 +40,54 @@ export default function AddPostScreen() {
 
   const handleSubmit = async () => {
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('user_uuid', user?.uuid ?? '');
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("user_uuid", user?.uuid ?? "");
 
-    if (title === '' || description === '') {
-      Alert.alert('Error', 'Los campos título y descripción son obligatorios');
+    if (title === "" || description === "") {
+      Alert.alert("Error", "Los campos título y descripción son obligatorios");
       return;
     }
 
     if (image) {
-      const filename = image.split('/').pop();
-      const match = /\.(\w+)$/.exec(filename ?? '');
+      const filename = image.split("/").pop();
+      const match = /\.(\w+)$/.exec(filename ?? "");
       const type = match ? `image/${match[1]}` : `image`;
 
-      formData.append('file', {
+      formData.append("file", {
         uri: image,
         name: filename,
         type,
       } as any);
+    } else {
+      Alert.alert("Error", "Debes seleccionar una imagen para la publicación");
+      return;
     }
-
-    console.log('formData:', formData);
 
     if (user) {
       const response = await createPublication({ formData, uuid: user.uuid });
       if (response) {
-        Alert.alert('Publicación creada', 'Tu publicación ha sido creada exitosamente');
+        Alert.alert(
+          "Publicación creada",
+          "Tu publicación ha sido creada exitosamente"
+        );
 
-        setTitle('');
-        setDescription('');
+        const response = await getPublicationsByUser({ uuid: user.uuid });
+        setMyPublications(response);
+
+        setTitle("");
+        setDescription("");
         setImage(null);
       } else {
-        Alert.alert('Error', 'Ocurrió un error al crear la publicación');
-
-        setTitle('');
-        setDescription('');
-        setImage(null);
+        Alert.alert("Error", "Ocurrió un error al crear la publicación");
       }
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        Nueva Publicación
-      </Text>
-      <Text style={styles.subtitle}>
-        Ingresa los datos de la publicación
-      </Text>
+      <Text style={styles.title}>Nueva Publicación</Text>
+      <Text style={styles.subtitle}>Ingresa los datos de la publicación.</Text>
       <AppTextInput
         placeholder="Ingresa el título"
         value={title}
@@ -91,83 +98,92 @@ export default function AddPostScreen() {
         value={description}
         onChangeText={setDescription}
       />
-      <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
-        <Text style={styles.imagePickerButtonText}>Pick an image from camera roll</Text>
-      </TouchableOpacity>
+      {!image && (
+        <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
+          <Octicons name="upload" size={24} color="#5EC3B2" />
+          <Text style={styles.imagePickerButtonText}>
+            Selecciona una imagen de la galería
+          </Text>
+        </TouchableOpacity>
+      )}
       {image && (
-        <View style={styles.imageContainer}>
+        <View style={{ position: "relative" }}>
           <Image source={{ uri: image }} style={styles.image} />
-          <TouchableOpacity style={styles.removeButton} onPress={removeImage}>
-            <Text style={styles.removeButtonText}>Remove Image</Text>
-          </TouchableOpacity>
+          <IconButton
+            icon="close"
+            mode="contained"
+            iconColor="#fafafa"
+            containerColor="#EF3166"
+            style={{
+              position: "absolute",
+              top: 4,
+              right: 4,
+            }}
+            size={20}
+            onPress={removeImage}
+          />
         </View>
       )}
-      <Pressable
-        style={({ pressed }) => [
-          {
-            backgroundColor: pressed ? '#1e90ff' : '#1e90ff',
-          },
-          {
-            padding: 10,
-            borderRadius: 5,
-            alignItems: 'center',
-          },
-        ]}
-        onPress={handleSubmit}
-      >
-        <Text>Publicar</Text>
-      </Pressable>
+      <Button mode="contained" buttonColor="#5EC3B2" onPress={handleSubmit}>
+        <Text
+          style={{
+            color: "#fff",
+            fontWeight: "600",
+          }}
+        >
+          {" "}
+          Crear Publicación
+        </Text>
+      </Button>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     flex: 1,
-    paddingTop: Constants.statusBarHeight + 30,
     paddingHorizontal: 24,
+    paddingTop: 36,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
+    fontWeight: "bold",
+    marginBottom: 6,
+    color: "#333",
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 20,
-    color: '#666',
+    color: "#666",
+    fontWeight: "400",
   },
   imagePickerButton: {
-    marginVertical: 20,
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: '#1e90ff',
-    alignItems: 'center',
+    justifyContent: "center",
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: "#DEDEDE",
+    alignItems: "center",
   },
   imagePickerButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#1a1a1a",
+    width: 150,
+    marginTop: 6,
+    textAlign: "center",
   },
   imageContainer: {
-    alignItems: 'center',
-    marginTop: 20,
+    alignItems: "center",
   },
   image: {
-    width: 200,
+    width: "100%",
     height: 200,
-    marginBottom: 10,
     borderRadius: 10,
-  },
-  removeButton: {
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: '#ff4d4d',
-    alignItems: 'center',
+    marginBottom: 24,
   },
   removeButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
   },
 });

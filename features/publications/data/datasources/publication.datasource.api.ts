@@ -13,15 +13,20 @@ import {
 
 export const createPublication = async (request: CreatePublicationModel) => {
   try {
+    console.log("CREATE PUBLICATION REQUEST", request);
+
     const response = await OnWorkApiPublications.post<PublicationResponse>(
       "publications",
       request.formData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
         },
       }
     );
+
+    console.log("PUBLICATION CREATE RESPONSE", response);
 
     if (response.status === 201) {
       return response.data;

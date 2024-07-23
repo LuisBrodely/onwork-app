@@ -3,8 +3,8 @@ import { router } from "expo-router";
 import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
 
 export default function HomeScreen() {
-
   const { signOut, user } = useSessionStore();
+  
   return (
     <View style={styles.container}>
       <Button
