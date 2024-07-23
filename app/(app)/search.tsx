@@ -8,11 +8,12 @@ import { PriceList } from "@/shared/components/(modals)/PriceList";
 import { Searchbar, Button } from "react-native-paper";
 import { useProviderStore } from "@/features/providers/presentation/controllers/useProviderStore";
 import { ProviderCard } from "@/shared/components/custom/ProviderCard";
+import { Provider, Tag } from "@/features/providers/data/interfaces/provider.interface";
 
 export default function Search() {
   const { providers, getProviders } = useProviderStore();
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProviders, setFilteredProviders] = useState(providers);
+  const [filteredProviders, setFilteredProviders] = useState<Provider[]>([]);
   const bottomSheetCategoriesRef = useRef<BottomSheetMethods>(null);
   const bottomSheetPricesRef = useRef<BottomSheetMethods>(null);
   const bottomSheetDistancesRef = useRef<BottomSheetMethods>(null);
@@ -44,11 +45,11 @@ export default function Search() {
     }
   }, [searchQuery, providers]);
 
-  const groupProvidersByCategory = (providers) => {
-    const groupedProviders = {};
+  const groupProvidersByCategory = (providers: Provider[]) => {
+    const groupedProviders: { [key: string]: Provider[] } = {};
 
-    providers.forEach(provider => {
-      provider.tags.forEach(tag => {
+    providers.forEach((provider: Provider) => {
+      provider.tags.forEach((tag: Tag) => {
         if (!groupedProviders[tag.title]) {
           groupedProviders[tag.title] = [];
         }
