@@ -4,6 +4,7 @@ import Animated, { useAnimatedRef, useAnimatedScrollHandler, useSharedValue } fr
 import data, { OnBoardingData } from '@/shared/data/data'
 import RenderItem from '@/shared/components/onboarding/RenderItem'
 import Pagination from '@/shared/components/onboarding/Pagination'
+import CustomButton from '@/shared/components/onboarding/CustomButton'
 
 type Props = {}
 
@@ -47,6 +48,12 @@ const onboarding = (props: Props) => {
       />
       <View style={styles.bottomContainer}>
         <Pagination data={data} x={x}/>
+        <CustomButton 
+          flatListRef={flatListRef}
+          flatListIndex={flatListIndex}
+          dataLength={data.length}
+          x={x}
+        />
       </View>
     </View>
   )
@@ -65,5 +72,8 @@ const styles = StyleSheet.create({
     right: 0,
     marginHorizontal: 30,
     paddingVertical: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 })
