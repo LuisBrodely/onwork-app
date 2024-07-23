@@ -45,6 +45,7 @@ export default function AppLayout() {
               {focused && <View style={styles.activeIndicator} />}
             </View>
           ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -56,6 +57,7 @@ export default function AppLayout() {
               {focused && <View style={styles.activeIndicator} />}
             </View>
           ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
