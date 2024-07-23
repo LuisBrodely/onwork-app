@@ -12,7 +12,7 @@ export const SignInScreen = () => {
   const { signIn } = useSessionStore();
   const [signInForm, setSignInForm] = useState<SignInModel>({
     email: "ramosproque4@gmail.com",
-    password: "1234567810",
+    password: "12345678",
   });
 
   const handleSignIn = async (signInModel: SignInModel) => {

@@ -6,12 +6,29 @@ import { FAB, Divider } from "react-native-paper";
 import { Image } from "expo-image";
 import { useUserStore } from "@/features/users/presentation/controllers/useUserStore";
 import { User } from "@/features/session/data/interfaces/session.interface";
+import { Valoration } from "@/features/valorations/data/interfaces/valoration.interface";
+import { useProviderStore } from "@/features/providers/presentation/controllers/useProviderStore";
 
 const ValorationsScreen = () => {
-  const { myValorations } = useValorationStore();
+  const [valorations, setValorations] = useState<Valoration[]>([]);
+  const { getValorationsByProvider } = useValorationStore();
+  const { selectedUuidProvider } = useProviderStore()
   const { getUsers } = useUserStore();
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchValorations = async () => {
+      if (selectedUuidProvider) {
+        const response = await getValorationsByProvider({
+          uuid: selectedUuidProvider,
+        });
+        setValorations(response);
+      }
+    };
+
+    fetchValorations();
+  }, [selectedUuidProvider]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -28,7 +45,7 @@ const ValorationsScreen = () => {
 
   return (
     <View style={styles.container}>
-      {myValorations.length === 0 && (
+      {valorations.length === 0 && (
         <Text
           style={{
             fontSize: 16,
@@ -40,10 +57,10 @@ const ValorationsScreen = () => {
         </Text>
       )}
 
-      {myValorations && 
+      {valorations && 
         <FlatList
         horizontal={false}
-        data={myValorations}
+        data={valorations}
         keyExtractor={(item) => item.uuid}
         showsHorizontalScrollIndicator={false}
         style={{ paddingTop: 24 }}
@@ -121,7 +138,7 @@ const ValorationsScreen = () => {
         mode="flat"
         color="#FFF"
         onPress={() => {
-          router.push("/profile/valorations/create");
+          router.push("/provider/valorations/create");
         }}
       />
     </View>
@@ -136,7 +153,7 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: "absolute",
-    margin: 16,
+    margin: 36,
     right: 0,
     bottom: 0,
     backgroundColor: "#EF3166",

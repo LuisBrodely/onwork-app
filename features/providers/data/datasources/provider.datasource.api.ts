@@ -5,6 +5,7 @@ import { ProvidersResponse } from "@/features/providers/data/interfaces/provider
 export const getProviders = async () => {
   try {
     const response = await OnWorkApi.get<ProvidersResponse>('/users/providers');
+
     if (response.status === 200) {
       return response.data;
     } else {

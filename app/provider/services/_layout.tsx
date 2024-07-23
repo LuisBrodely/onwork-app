@@ -6,7 +6,6 @@ export default function Layout() {
       headerShown: false,
     }}>
       <Stack.Screen name="index" />
-      <Stack.Screen name="create" />
       <Stack.Screen name="[id]" />
     </Stack>
   );

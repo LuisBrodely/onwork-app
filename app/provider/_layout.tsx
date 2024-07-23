@@ -43,7 +43,6 @@ const Layout = () => {
         name="valorations"
         options={{ title: "Opiniones" }}
       />
-      <MaterialTopTabs.Screen name="payment" options={{ title: "Pagos" }} />
     </MaterialTopTabs>
   );
 };

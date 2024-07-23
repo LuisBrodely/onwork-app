@@ -251,18 +251,16 @@ const PublicationScreen = () => {
 
 
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, paddingHorizontal: 24 }}>
       <ScrollView
         style={styles.container}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
       >
-        <Text>ID: {id}</Text>
-
         <Text>{service?.name}</Text>
         <Text>{service?.cost_total}</Text>
 
-        <View style={{ padding: 16 }}>
+        <View>
           <ButtonComp
             onPress={onPressPaypal}
             disabled={false}
