@@ -23,8 +23,8 @@ const PaymentsScreen = () => {
         showsHorizontalScrollIndicator={false}
       >
         {user?.role === Role.SERVICE_PROVIDER && (
-          <View>
-            <Text>Payments</Text>
+          <View >
+            <Text style={styles.title}>No tienes pagos pendientes</Text>
           </View>
         )}
 
@@ -49,6 +49,11 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: "#FF5C69",
   },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginTop: 14,
+  }
 });
 
 export default PaymentsScreen;

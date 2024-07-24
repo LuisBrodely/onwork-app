@@ -26,3 +26,8 @@ export interface UserUpdatePasswordModel {
   password: string;
   newPassword: string;
 }
+
+export interface UserUpdateImageModel{
+  uuid: string;
+  formData: FormData;
+}

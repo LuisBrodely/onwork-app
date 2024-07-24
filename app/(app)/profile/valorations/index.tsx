@@ -6,6 +6,7 @@ import { FAB, Divider } from "react-native-paper";
 import { Image } from "expo-image";
 import { useUserStore } from "@/features/users/presentation/controllers/useUserStore";
 import { User } from "@/features/session/data/interfaces/session.interface";
+import Graphs from "@/shared/components/Graphs";
 
 const ValorationsScreen = () => {
   const { myValorations, myValorationsSerie } = useValorationStore();
@@ -20,6 +21,9 @@ const ValorationsScreen = () => {
     };
 
     fetchUsers();
+    myValorationsSerie.map((serie) => {
+      console.log(serie.s3_url);
+    });
   }, []);
 
   const getUserByUuid = (uuid: string) => {
@@ -28,10 +32,6 @@ const ValorationsScreen = () => {
 
   return (
     <View style={styles.container}>
-      {myValorationsSerie?.map((serie) => {
-        return <Image source={{ uri: serie.s3_url }} style={{ width: 100, height: 100 }} />;
-      })}
-
       {myValorations.length === 0 && (
         <Text
           style={{
@@ -53,7 +53,6 @@ const ValorationsScreen = () => {
           style={{ paddingTop: 24 }}
           renderItem={({ item }) => {
             const user = getUserByUuid(item.user_uuid);
-
             return (
               <View style={{ marginBottom: 20 }}>
                 <View>
@@ -118,7 +117,9 @@ const ValorationsScreen = () => {
             );
           }}
         />}
-
+      <View>
+        <Graphs />
+      </View>
       <FAB
         icon="plus"
         style={styles.fab}

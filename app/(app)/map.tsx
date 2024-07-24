@@ -6,6 +6,7 @@ import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
 import { useProviderStore } from "@/features/providers/presentation/controllers/useProviderStore";
+import { useRouter } from "expo-router";
 
 interface Coordinates {
   accuracy: number;
@@ -30,7 +31,10 @@ const INITIAL_REGION = {
 
 
 export default function ProfileScreen() {
-  const { providers, getProviders } = useProviderStore();
+  const { providers, getProviders, setSelectedUuidProvider } = useProviderStore();
+
+  const router = useRouter();
+
   useEffect(() => {
     getProviders();
   }, []);
@@ -67,14 +71,18 @@ export default function ProfileScreen() {
         style={styles.map}
         initialRegion={INITIAL_REGION}
       >
-        {providers && providers.map((user) => (
+        {providers && providers.map((provider) => (
           <Marker
-            key={user.uuid}
+            key={provider.uuid}
             coordinate={{
-              latitude: user.latitude,
-              longitude: user.longitude,
+              latitude: provider.latitude,
+              longitude: provider.longitude,
             }}
-            title={"Persona a cargo:  " + user.name}
+            title={"Persona a cargo:  " + provider.name}
+            onPress={() => {
+              setSelectedUuidProvider(provider.uuid);
+              router.push("provider");
+            }}
           >
             <View style={styles.marker}>
               <Text
@@ -83,7 +91,7 @@ export default function ProfileScreen() {
                   textAlign: 'center',
                   fontWeight: 'bold',
                 }}>
-                {user?.tags.length > 0 ? user?.tags[0].title : user.name}
+                {provider?.tags.length > 0 ? provider?.tags[0].title : provider.name}
               </Text>
             </View>
           </Marker>

@@ -13,8 +13,6 @@ import {
 
 export const createPublication = async (request: CreatePublicationModel) => {
   try {
-    console.log("CREATE PUBLICATION REQUEST", request);
-
     const response = await OnWorkApiPublications.post<PublicationResponse>(
       "publications",
       request.formData,
@@ -25,8 +23,6 @@ export const createPublication = async (request: CreatePublicationModel) => {
         },
       }
     );
-
-    console.log("PUBLICATION CREATE RESPONSE", response);
 
     if (response.status === 201) {
       return response.data;
@@ -43,7 +39,6 @@ export const getPublicationsByUser = async (
   request: GetPublicationsByUserModel
 ) => {
   try {
-    console.log("ayudaaa", request.uuid);
 
     const response = await OnWorkApi.get<PublicationsResponse>(
       `publications/user/${request.uuid}`
@@ -56,7 +51,6 @@ export const getPublicationsByUser = async (
     }
   } catch (err) {
     const error = err as AxiosError;
-    console.error("Error in getPublicationsByUser:", error.message);
     throw new Error(error.message);
   }
 };

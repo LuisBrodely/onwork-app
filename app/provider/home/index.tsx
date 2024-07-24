@@ -329,6 +329,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     marginRight: 8,
+    marginVertical: 6,
   },
   skillText: {
     fontSize: 14,
