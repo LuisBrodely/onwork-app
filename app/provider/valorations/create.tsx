@@ -6,22 +6,36 @@ import { useSessionStore } from "@/features/session/presentation/controllers/use
 import StarRating from "react-native-star-rating-widget";
 import { TextInput } from "react-native-paper";
 import { useRouter } from "expo-router";
+import { useProviderStore } from "@/features/providers/presentation/controllers/useProviderStore";
 
 const ServicesScreen = () => {
   const router = useRouter();
   const { createValoration } = useValorationStore();
   const { user } = useSessionStore();
+  const { selectedUuidProvider } = useProviderStore();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
   const handleSubmit = async () => {
     if (user) {
+      if (!rating || !comment) {
+        Alert.alert("Todos los campos son requeridos");
+        return;
+      }
+
+      if (!selectedUuidProvider) {
+        Alert.alert("Error", "No se ha seleccionado un proveedor");
+        return;
+      }
+
       const response = await createValoration({
         user_uuid: user.uuid,
-        provider_uuid: user.uuid,
+        provider_uuid: selectedUuidProvider,
         rating,
         comment,
       });
+
+      console.log("response", response);
 
       if (response) {
         Alert.alert("Success", "Valoración creada correctamente");

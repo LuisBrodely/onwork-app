@@ -17,7 +17,12 @@ export const createValoration = async (request: CreateValorationModel) => {
   try {
     const response = await OnWorkApi.post<ValorationResponse>(
       "valorations",
-      request
+      {
+        user_uuid: request.user_uuid,
+        provider_uuid: request.provider_uuid,
+        rating: request.rating,
+        comment: request.comment,
+      }
     );
 
     if (response.status === 201) {

@@ -1,10 +1,11 @@
 import { View, StyleSheet, ScrollView, Alert, Text } from "react-native";
 import { useState } from "react";
-import { FAB, TextInput, Button } from "react-native-paper";
+import { FAB, TextInput, Button, Switch } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useSessionStore } from "@/features/session/presentation/controllers/useSessionStore";
 import { useUserStore } from "@/features/users/presentation/controllers/useUserStore";
 import {
+  Role,
   UserUpdateModel,
   UserUpdatePasswordModel,
 } from "@/features/users/domain/models/user.model";
@@ -68,6 +69,30 @@ const EditProfileScreen = () => {
     } else {
       Alert.alert("Contraseña actualizada correctamente");
       router.back();
+    }
+  };
+
+  const { updateUserRole } = useUserStore();
+  const [isSwitchOn, setIsSwitchOn] = useState(
+    user?.role === Role.SERVICE_PROVIDER
+  );
+
+  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+
+  const handleUpdateRole = async () => {
+    const response = await updateUserRole({
+      uuid: user?.uuid || "",
+      role: isSwitchOn ? Role.SERVICE_PROVIDER : Role.CLIENT,
+    });
+
+    if (response) {
+      const updatedUser = await getUserByUuid({ uuid: user?.uuid || "" });
+      if (!updatedUser) return;
+      setUser(updatedUser);
+      Alert.alert("Actualizado", "Rol actualizado correctamente");
+      router.back();
+    } else {
+      Alert.alert("Error", "Ocurrió un error al actualizar el rol");
     }
   };
 
@@ -188,6 +213,34 @@ const EditProfileScreen = () => {
           }}
         >
           Actualizar contraseña
+        </Button>
+
+        <Text
+          style={{
+            fontSize: 24,
+            fontWeight: "bold",
+            marginTop: 24,
+          }}
+        >
+          Actualizar Rol
+        </Text>
+
+        <View style={{ marginTop: 12, gap: 14 }}>
+          <Text>¿Quieres ser proveedor?</Text>
+          <Switch
+            value={isSwitchOn}
+            onValueChange={onToggleSwitch}
+            color="#EF3166"
+          />
+        </View>
+
+        <Button
+          mode="contained"
+          buttonColor="#EF3166"
+          style={{ marginTop: 24 }}
+          onPress={handleUpdateRole}
+        >
+          Guardar
         </Button>
 
         <Text

@@ -8,7 +8,7 @@ import { Role } from "@/features/users/domain/models/user.model";
 import { Button } from "react-native-paper";
 
 const EditProfileScreen = () => {
-  const { user, setUser, signIn } = useSessionStore();
+  const { user, setUser } = useSessionStore();
   const { updateUserRole, getUserByUuid } = useUserStore();
   const router = useRouter();
   const [isSwitchOn, setIsSwitchOn] = useState(user?.role === Role.SERVICE_PROVIDER);

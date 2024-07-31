@@ -46,89 +46,79 @@ const ValorationsScreen = () => {
 
       {myValorations &&
         <FlatList
-          horizontal={false}
-          data={myValorations}
-          keyExtractor={(item) => item.uuid}
-          showsHorizontalScrollIndicator={false}
-          style={{ paddingTop: 24 }}
-          renderItem={({ item }) => {
-            const user = getUserByUuid(item.user_uuid);
-            return (
-              <View style={{ marginBottom: 20 }}>
-                <View>
-                  <View
+        horizontal={false}
+        data={myValorations}
+        keyExtractor={(item) => item.uuid}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        style={{ paddingTop: 24 }}
+        renderItem={({ item }) => {
+          const user = getUserByUuid(item.user_uuid);
+
+          return (
+            <View style={{ marginBottom: 20 }}>
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  <Image
+                    source={{ uri: user?.image_url }}
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 10,
+                      width: 44,
+                      height: 44,
+                      borderRadius: 50,
+                      backgroundColor: "gray",
                     }}
-                  >
-                    <Image
-                      source={{ uri: user?.image_url }}
+                  />
+                  <View>
+                    <Text style={{ fontSize: 14, fontWeight: "600" }}>
+                      {user?.name || "Nombre del usuario"}
+                    </Text>
+                    <View
                       style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: 50,
-                        backgroundColor: "gray",
+                        marginTop: 4,
+                        backgroundColor: "#EF3166",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: 20,
+                        padding: 3,
+                        width: 80,
                       }}
-                    />
-                    <View>
-                      <Text style={{ fontSize: 14, fontWeight: "600" }}>
-                        {user?.name || "Nombre del usuario"}
-                      </Text>
-                      <View
+                    >
+                      <Text
                         style={{
-                          marginTop: 4,
-                          backgroundColor: "#EF3166",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          borderRadius: 20,
-                          padding: 3,
-                          width: 80,
+                          color: "#FFF",
+                          fontSize: 10,
+                          fontWeight: "bold",
                         }}
                       >
-                        <Text
-                          style={{
-                            color: "#FFF",
-                            fontSize: 10,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {item.general_review}
-                        </Text>
-                      </View>
+                        {item.general_review}
+                      </Text>
                     </View>
                   </View>
                 </View>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "400",
-                    color: "#666",
-                    marginTop: 10,
-                    fontStyle: "italic",
-                    marginRight: 14,
-                  }}
-                >
-                  {`"${item.comment}"`}
-                </Text>
-                <Divider style={{ marginTop: 24 }} />
               </View>
-            );
-          }}
-        />}
-      <View>
-        <Graphs />
-      </View>
-      <FAB
-        icon="plus"
-        style={styles.fab}
-        mode="flat"
-        color="#FFF"
-        onPress={() => {
-          router.push("/profile/valorations/create");
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "400",
+                  color: "#666",
+                  marginTop: 10,
+                  fontStyle: "italic",
+                  marginRight: 14,
+                }}
+              >
+                {`"${item.comment}"`}
+              </Text>
+              <Divider style={{ marginTop: 24 }} />
+            </View>
+          );
         }}
-      />
+      />}
     </View>
   );
 };
